@@ -1,0 +1,13 @@
+# API Directory - Allow API access only
+RewriteEngine On
+
+# Only allow POST and OPTIONS methods
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} !^(POST|OPTIONS)$
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# Set headers for API
+<IfModule mod_headers.c>
+    Header always set Content-Type "application/json; charset=utf-8"
+</IfModule>
