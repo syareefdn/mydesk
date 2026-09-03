@@ -38,6 +38,7 @@ function bootstrap(q) {
       tutup: formTertutup(),
       catatan: String(getSettings()[SETTING_KEY.CATATAN_ADMIN] || ''),
       bolehUbah: !!CONFIG.BOLEH_UBAH_JAWABAN,
+      hanyaAtasan: CONFIG.HANYA_ATASAN !== false,
       wajibList: !!CONFIG.WAJIB_LIST_NAMA,
       modelBaju: CONFIG.MODEL_BAJU,
       ukuran: CONFIG.UKURAN,

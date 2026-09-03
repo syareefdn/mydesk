@@ -204,13 +204,16 @@
       <!-- 3. PELENGKAP -->
       <section class="card">
         <h2><span class="num">3</span> Pelengkap &amp; Pengiriman</h2>
-        <p class="hint">Diisi bila seragam mencakup bawahan/sepatu atau pengiriman ke alamat.</p>
-        <div class="row c2">
-          <label class="f"><div class="lbl">Ukuran celana/rok</div>
-            <input type="text" id="celana" placeholder="mis. no. 32 atau P: 72 cm"></label>
-          <label class="f"><div class="lbl">Ukuran sepatu</div>
-            <input type="text" id="sepatu" placeholder="mis. 41 (26,5 cm)"></label>
-        </div>
+        <p class="hint">Bordir, WhatsApp, dan alamat pengiriman. Ukuran bawahan/sepatu tersedia di kotak opsional (terlipat) karena yang diproduksi hanya baju atasan.</p>
+        <details id="kotakBawahan">
+          <summary>Tambah ukuran bawahan / sepatu — <i>opsional</i>, tidak diperlukan bila yang diproduksi hanya baju atasan</summary>
+          <div class="row c2" style="margin-top:10px">
+            <label class="f"><div class="lbl">Ukuran celana/rok <span class="opt">opsional</span></div>
+              <input type="text" id="celana" placeholder="mis. no. 32 atau P: 72 cm"></label>
+            <label class="f"><div class="lbl">Ukuran sepatu <span class="opt">opsional</span></div>
+              <input type="text" id="sepatu" placeholder="mis. 41 (26,5 cm)"></label>
+          </div>
+        </details>
         <div class="row c2">
           <label class="f"><div class="lbl">Bordir / sulam</div>
             <select id="bordir"></select></label>
@@ -404,7 +407,7 @@ var Mock = (function () {
       return P({ok:true, app:{organisasi:'Ikatan Pustakawan Indonesia (IPI) Jawa Tengah',
         kegiatan:'Pendataan Ukuran Seragam Organisasi', periode:'Tahun 2026',
         pic:'Pratinjau lokal — setelah deploy, ganti dengan kontak panitia',
-        logo:'', tenggat:'20 September 2026', tutup:st.tutup_form === 'true', bolehUbah:true, wajibList:true,
+        logo:'', tenggat:'20 September 2026', tutup:st.tutup_form === 'true', bolehUbah:true, wajibList:true, hanyaAtasan:true,
         catatan:st.catatan_form || '[Mode pratinjau] Data disimpan di browser ini saja, belum ke Google Sheets.',
         modelBaju:['Lengan Panjang','Lengan Pendek','Lengan Panjang + Pendek (2 set)'],
         ukuran:['XS','S','M','L','XL','XXL','XXXL','4XL','Ukuran Khusus (Custom)'],
@@ -525,6 +528,13 @@ function boot() {
     isiSizes();
     isiSelect('cadangan', (a.ukuran||[]).filter(function(u){return !/custom/i.test(u);}), true);
     isiSelect('bordir', a.bordir || [], true);
+    if (a.hanyaAtasan === false) {                  // bawahan ikut diproduksi → wajib & terbuka
+      $('kotakBawahan').open = true;
+      $('kotakBawahan').querySelector('summary').innerHTML =
+        'Ukuran bawahan / sepatu <span class="req">wajib</span> — bawahan ikut diproduksi';
+      $('celana').closest('label').querySelector('.lbl').innerHTML =
+        'Ukuran celana/rok <span class="req">wajib</span>';
+    }
     if ($('token')) $('token').value = TOKEN === 'preview' ? '' : TOKEN;
     if (SERVER.view === 'admin') masukAdmin();
   }).catch(function (e) {
@@ -629,6 +639,7 @@ function prefill(j) {
   Object.keys(m).forEach(function (id) { if (j[m[id]] != null && m[id] !== 'Rekomendasi Sistem') $(id).value = j[m[id]]; });
   setRadio('kelamin', j['Jenis Kelamin']); setRadio('model', j['Model Baju']); setRadio('ukuran', j['Ukuran']);
   if (j['Bordir']) $('bordir').value = j['Bordir'];
+  if (j['Ukuran Celana/Rok'] || j['Ukuran Sepatu (cm/no)']) $('kotakBawahan').open = true;
   live();
 }
 function setRadio(name, val) {
@@ -671,6 +682,8 @@ function validasiDepan(p) {
   if (!p['Model Baju']) e.push('Model baju belum dipilih.');
   if (!p['Ukuran']) e.push('Ukuran belum dipilih.');
   if (!p['No. WhatsApp']) e.push('No. WhatsApp wajib diisi untuk konfirmasi ukuran.');
+  if (S.boot && S.boot.app.hanyaAtasan === false && !p['Ukuran Celana/Rok'])
+    e.push('Ukuran celana/rok wajib diisi karena bawahan ikut diproduksi.');
   if (!$('setuju').checked) e.push('Centang pernyataan keakuratan data sebelum mengirim.');
   return e;
 }

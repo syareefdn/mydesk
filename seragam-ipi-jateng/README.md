@@ -17,6 +17,21 @@ Dua cara pakai, boleh dipilih (atau digabung):
 
 ---
 
+## 0. Enam hal yang perlu Anda ganti
+
+| Apa | Di mana | Catatan |
+|---|---|---|
+| `ADMIN_TOKEN` | `Config.gs` | kunci halaman rekap — pakai string acak |
+| `EMAIL_PANITIA` | `Config.gs` | isi `['...']`; kosong = notifikasi email mati (data tetap masuk) |
+| `BATAS_ISI` & `PIC` | `Config.gs` | tenggat tampil di header; tenggat lewat = form tertutup sendiri |
+| Daftar nama anggota | tab `DaftarNama` (atau menu **Seragam IPI ▸ 5**) | masih 6 nama contoh — **ganti dengan daftar dari PDF** |
+| Size chart | tab `SizeChart` | masih angka umum S–4XL — **sesuaikan dengan chart konveksi Anda** |
+| `HANYA_ATASAN` | `Config.gs` | `true` (default) = hanya baju atasan; `false` = celana/rok jadi wajib |
+
+Sesuai pilihan Anda, kontrol pengisian sudah aktif: **hanya nama di daftar yang bisa mengirim**
+(`WAJIB_LIST_NAMA`), **satu nama = satu baris** (kirim ulang = revisi, bukan duplikat),
+dan ukuran yang meleset ≥ 2 langkah dari rekomendasi dikonfirmasi dulu sebelum tersimpan.
+
 ## 1. Pasang (± 10 menit)
 
 1. Buat Google Spreadsheet baru, nama bebas, mis. **"Data Seragam IPI Jateng 2026"**.
@@ -106,7 +121,7 @@ Menu spreadsheet menyediakan hal yang sama: **Seragam IPI → 3/4/toggle form**.
 cd seragam-ipi-jateng
 python3 preview/serve.py 8080        # lihat http://localhost:8080/  (dan /?view=admin)
 npm i                                # hanya untuk tes: memasang jsdom
-npm test                             # 40 tes logika Apps Script + 31 tes tampilan (jsdom)
+npm test                             # 40 tes logika Apps Script + 32 tes tampilan (jsdom)
 ```
 
 `preview/serve.py` menjalankan `web/Index.html` dalam **mode Mock**: data disimpan di

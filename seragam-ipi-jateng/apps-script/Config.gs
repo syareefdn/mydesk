@@ -55,6 +55,14 @@ var CONFIG = {
   TUTUP_FORM: false,          // bisa diubah tanpa deploy lewat sheet Settings
   PAKAI_GOOGLE_FORM: false,   // true: alur Google Form (lihat CreateForm.gs)
 
+  /**
+   * true  = yang diproduksi hanya baju ATASAN. Kolom bawahan/sepatu tetap ada di
+   *         sheet (untuk kebutuhan mendatang) tapi di form ditampilkan sebagai
+   *         kotak opsional terlipat dan tidak pernah menahan pengiriman.
+   * false = bawahan (celana/rok) ikut diproduksi → kotak dibuka otomatis & wajib diisi.
+   */
+  HANYA_ATASAN: true,
+
   /* ---------- Pilihan jawaban ---------- */
   MODEL_BAJU: ['Lengan Panjang', 'Lengan Pendek', 'Lengan Panjang + Pendek (2 set)'],
   UKURAN: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '4XL', 'Ukuran Khusus (Custom)'],

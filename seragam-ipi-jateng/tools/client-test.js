@@ -175,6 +175,12 @@ const tampil = (w, id) => !w.document.getElementById(id).classList.contains('hid
     eq(db.rows.length, 1, 'jumlah baris harus tetap 1');
     eq(db.rows[0]['Ukuran'], 'XL');
   });
+  await t('bendera HANYA_ATASAN=false menjadikan celana wajib', () => {
+    w.S.boot.app.hanyaAtasan = false;
+    ok(w.validasiDepan(w.payload()).some(x => /celana/.test(x)), 'tidak menuntut ukuran celana');
+    w.S.boot.app.hanyaAtasan = true;
+    ok(!w.validasiDepan(w.payload()).some(x => /celana/.test(x)), 'masih menuntut celana padahal hanya atasan');
+  });
   await t('tombol "isi contoh" mengisi seluruh field wajib', async () => {
     w.isiContoh(); await tick(w, 60);
     const p = w.payload();
