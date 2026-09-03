@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<base target="_top">
+<title>Data Ukuran Seragam — IPI Jawa Tengah</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --hijau:#1a7f5c; --hijau-t:#e8f4ef; --hijau-g:#0f5b41;
+    --text:#16241f; --mut:#5d6f68; --line:#dde6e2; --bg:#f5f8f6;
+    --merah:#b3261e; --merah-t:#fdecea; --kuning:#8a6100; --kuning-t:#fff5df;
+    --radius:14px; --shadow:0 1px 2px rgba(16,40,32,.06),0 8px 24px rgba(16,40,32,.07);
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;padding:16px 14px 60px}
+  header.top{background:linear-gradient(135deg,var(--hijau-g),var(--hijau));color:#fff;
+    padding:22px 14px 26px;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow)}
+  header.top .in{max-width:960px;margin:0 auto;display:flex;gap:14px;align-items:center}
+  .lencana{width:46px;height:46px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.16);
+    display:grid;place-items:center;font-weight:800;letter-spacing:.5px;font-size:15px;
+    border:1px solid rgba(255,255,255,.28)}
+  h1{font-size:20px;margin:0;line-height:1.25}
+  .sub{opacity:.9;font-size:13.5px;margin-top:3px}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px 11px;font-size:12.5px;margin-top:8px}
+  main{margin-top:-14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+  .card>h2{font-size:15px;margin:0 0 4px;display:flex;align-items:center;gap:9px}
+  .num{width:22px;height:22px;border-radius:7px;background:var(--hijau);color:#fff;font-size:12px;
+    display:grid;place-items:center;font-weight:700;flex:0 0 auto}
+  .card>p.hint{margin:0 0 14px;color:var(--mut);font-size:13px}
+  label.f{display:block;margin:0 0 13px}
+  .lbl{font-size:13px;font-weight:600;margin-bottom:5px;display:flex;gap:6px;align-items:baseline}
+  .req{color:var(--merah);font-size:11px;font-weight:700}
+  .opt{color:var(--mut);font-size:11px;font-weight:500}
+  input[type=text],input[type=email],input[type=number],select,textarea{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fcfdfc;
+    font:inherit;color:inherit;transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--hijau);
+    box-shadow:0 0 0 3px rgba(26,127,92,.14);background:#fff}
+  textarea{min-height:78px;resize:vertical}
+  .row{display:grid;gap:0 14px}
+  .row.c2{grid-template-columns:1fr 1fr}
+  .row.c4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:640px){.row.c4{grid-template-columns:1fr 1fr}}
+  .unit{position:relative}
+  .unit span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:12px;pointer-events:none}
+  .pillset{display:flex;flex-wrap:wrap;gap:8px}
+  .pill{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;cursor:pointer;
+    font-size:14px;display:flex;gap:8px;align-items:center;transition:.15s}
+  .pill:hover{border-color:var(--hijau);background:var(--hijau-t)}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill.on{border-color:var(--hijau);background:var(--hijau-t);box-shadow:inset 0 0 0 1px var(--hijau);font-weight:600}
+  .sizes{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+  .size{border:1px solid var(--line);border-radius:11px;padding:9px 8px;text-align:center;cursor:pointer;
+    background:#fff;transition:.15s}
+  .size b{display:block;font-size:15px}
+  .size i{font-style:normal;font-size:11px;color:var(--mut);display:block;margin-top:2px}
+  .size:hover{border-color:var(--hijau)}
+  .size.on{border-color:var(--hijau);background:var(--hijau-t);box-shadow:inset 0 0 0 1px var(--hijau)}
+  .size.on i{color:var(--hijau-g)}
+  .info{background:var(--hijau-t);border:1px solid #c9e6da;border-radius:11px;padding:11px 13px;font-size:13.5px}
+  .warn{background:var(--kuning-t);border:1px solid #f0d79a;color:var(--kuning);border-radius:11px;
+    padding:11px 13px;font-size:13.5px;margin-top:10px}
+  .err{background:var(--merah-t);border:1px solid #f2c3bf;color:var(--merah);border-radius:11px;
+    padding:11px 13px;font-size:13.5px;margin-top:10px}
+  .kv{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mut);margin-top:6px}
+  .kv b{color:var(--text)}
+  details{border:1px dashed var(--line);border-radius:11px;padding:9px 12px;margin:6px 0 13px;background:#fcfdfc}
+  summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--hijau-g)}
+  details ol{margin:8px 0 2px;padding-left:19px;font-size:13px;color:var(--mut)}
+  .btn{appearance:none;border:0;border-radius:11px;padding:13px 20px;font:inherit;font-weight:650;
+    cursor:pointer;transition:.15s;display:inline-flex;gap:8px;align-items:center;justify-content:center}
+  .btn.p{background:var(--hijau);color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+  .btn.p:hover{background:var(--hijau-g)}
+  .btn.s{background:#fff;color:var(--text);border:1px solid var(--line)}
+  .btn.s:hover{border-color:var(--hijau);color:var(--hijau-g)}
+  .btn.sm{padding:7px 12px;font-size:13px;border-radius:9px}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px}
+  .foot{color:var(--mut);font-size:12.5px;text-align:center;margin-top:18px}
+  .bar{height:8px;background:#eef3f0;border-radius:999px;overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:var(--hijau);border-radius:999px;transition:width .4s}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+  th{background:#f4f8f6;position:sticky;top:0;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);white-space:nowrap}
+  tr:hover td{background:#fafcfb}
+  .scroll{overflow:auto;max-height:64vh;border:1px solid var(--line);border-radius:11px}
+  .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .tag.o{background:#eef2f6;color:#33506b}.tag.g{background:var(--hijau-t);color:var(--hijau-g)}
+  .tag.y{background:var(--kuning-t);color:var(--kuning)}.tag.r{background:var(--merah-t);color:var(--merah)}
+  .grid-adm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+  .stat{border:1px solid var(--line);border-radius:11px;padding:12px}
+  .stat b{font-size:22px;display:block;line-height:1.1}
+  .stat span{font-size:12px;color:var(--mut)}
+  .bars div{display:grid;grid-template-columns:78px 1fr 34px;gap:8px;align-items:center;font-size:12.5px;margin:5px 0}
+  .bars i{display:block;height:9px;border-radius:999px;background:linear-gradient(90deg,var(--hijau),#4fae8b)}
+  .hide{display:none!important}
+  .mini{font-size:12px;color:var(--mut)}
+  .switch{display:inline-flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer}
+  .switch input{width:auto}
+  .sep{height:1px;background:var(--line);margin:16px 0}
+  @media print{header.top,.actions,.btn{display:none!important}body{background:#fff}.card{box-shadow:none;border-color:#bbb}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="lencana" id="lencana">IPI</div>
+  <div>
+    <h1 id="judul">Pendataan Ukuran Seragam</h1>
+    <div class="sub" id="subjudul">Ikatan Pustakawan Indonesia (IPI) Jawa Tengah</div>
+    <span class="chip hide" id="chipTenggat"></span>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <!-- ==================== FORM PENGISI ==================== -->
+  <div id="viewForm">
+    <div class="card hide" id="bannerTutup" style="border-color:#f2c3bf;background:var(--merah-t)">
+      <b>Form sudah ditutup.</b> <span id="bannerTutupTxt"></span>
+    </div>
+
+    <div class="card hide" id="bannerCatatan"><span id="bannerCatatanTxt"></span></div>
+    <div class="card hide" id="bannerLama" style="border-color:#c9e6da;background:var(--hijau-t)">
+      <div class="actions" style="margin:0;justify-content:space-between">
+        <div style="font-size:13.5px"><b>Data Anda sudah terkirim.</b><div class="kv" id="bannerLamaInfo"></div></div>
+        <div class="actions">
+          <button class="btn sm s" type="button" id="btnIsiUlang">Muat &amp; ubah jawaban saya</button>
+          <button class="btn sm s" type="button" id="btnTutupBanner">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <form id="formSeragam" autocomplete="off" novalidate>
+      <!-- 1. IDENTITAS -->
+      <section class="card">
+        <h2><span class="num">1</span> Identitas Anggota</h2>
+        <p class="hint">Pilih nama sesuai daftar anggota. wilayah &amp; kontak akan terisi otomatis.</p>
+        <label class="f">
+          <div class="lbl">Nama lengkap <span class="req">wajib</span></div>
+          <input type="text" id="nama" list="daftarNama" placeholder="Ketik 2–3 huruf untuk mencari nama Anda…" aria-describedby="namaInfo">
+          <datalist id="daftarNama"></datalist>
+          <div class="kv" id="namaInfo"></div>
+        </label>
+        <div class="row c2">
+          <label class="f"><div class="lbl">Kabupaten/Kota <span class="opt">otomatis</span></div>
+            <input type="text" id="wilayah" placeholder="mis. Banyumas"></label>
+          <label class="f"><div class="lbl">Jabatan di IPI <span class="opt">opsional</span></div>
+            <input type="text" id="jabatan" placeholder="mis. Koordinator Perpustakaan Sekolah"></label>
+        </div>
+        <div class="row c2">
+          <label class="f"><div class="lbl">Jenis kelamin <span class="req">wajib</span> <span class="opt">menentukan potongan</span></div>
+            <div class="pillset" id="kelamin"></div></label>
+          <label class="f"><div class="lbl">Email <span class="opt">untuk bukti isian</span></div>
+            <input type="email" id="email" placeholder="nama@email.com"></label>
+        </div>
+        <label class="f"><div class="lbl">No. WhatsApp <span class="req">wajib</span> <span class="opt">penjahit menghubungi bila ukuran perlu dipastikan</span></div>
+          <input type="text" id="wa" inputmode="tel" placeholder="08xxxxxxxxxx"></label>
+      </section>
+
+      <!-- 2. MODEL & UKURAN -->
+      <section class="card">
+        <h2><span class="num">2</span> Model &amp; Ukuran Baju</h2>
+        <p class="hint">Model lengan mengacu pada pedoman seragam organisasi; ukuran mengacu pada size chart di bawah.</p>
+        <div class="lbl">Model baju yang dibutuhkan <span class="req">wajib</span></div>
+        <div class="sizes" id="modelSet" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))"></div>
+
+        <div class="sep"></div>
+        <div class="lbl">Ukuran <span class="req">wajib</span> <span class="opt">angka kecil = rentang lingkar dada (cm)</span></div>
+        <div class="sizes" id="sizeSet"></div>
+        <div class="info hide" id="saranBox" style="margin-top:11px"></div>
+        <div id="warnLive"></div>
+
+        <div class="sep"></div>
+        <div class="lbl">Pengukuran (sangat disarankan — mencegah tukar ukuran)</div>
+        <details>
+          <summary>Cara mengukur yang benar</summary>
+          <ol>
+            <li><b>Lingkar dada:</b> meteran melingkar di bagian terbesar dada, 1–2 cm di bawah ketiak, badan tegak, bernapas normal.</li>
+            <li><b>Lingkar pinggang:</b> di bagian tersempit (biasanya setinggi pusar), jangan ditarik.</li>
+            <li><b>Panjang/tinggi badan &amp; berat:</b> tanpa sepatu, pembulatan wajar.</li>
+            <li>Bila di antara dua ukuran: <b>pilih yang lebih besar</b> untuk seragam berhijab/lengan panjang.</li>
+          </ol>
+        </details>
+        <div class="row c4">
+          <label class="f"><div class="lbl">Lingkar dada</div><div class="unit"><input type="number" id="dada" min="55" max="200" step="1"><span>cm</span></div></label>
+          <label class="f"><div class="lbl">Lingkar pinggang</div><div class="unit"><input type="number" id="pinggang" min="45" max="200" step="1"><span>cm</span></div></label>
+          <label class="f"><div class="lbl">Tinggi badan</div><div class="unit"><input type="number" id="tb" min="100" max="230" step="1"><span>cm</span></div></label>
+          <label class="f"><div class="lbl">Berat badan</div><div class="unit"><input type="number" id="bb" min="25" max="250" step="0.5"><span>kg</span></div></label>
+        </div>
+        <div class="row c2">
+          <label class="f"><div class="lbl">Ukuran cadangan <span class="opt">bila ukuran utama habis</span></div>
+            <select id="cadangan"><option value="">— biarkan sesuai ukuran utama —</option></select></label>
+          <label class="f"><div class="lbl">Panjang lengan / potongan khusus <span class="opt">opsional</span></div>
+            <input type="text" id="potongan" placeholder="mis. lengan diperpanjang 3 cm, potongan longgar"></label>
+        </div>
+      </section>
+
+      <!-- 3. PELENGKAP -->
+      <section class="card">
+        <h2><span class="num">3</span> Pelengkap &amp; Pengiriman</h2>
+        <p class="hint">Diisi bila seragam mencakup bawahan/sepatu atau pengiriman ke alamat.</p>
+        <div class="row c2">
+          <label class="f"><div class="lbl">Ukuran celana/rok</div>
+            <input type="text" id="celana" placeholder="mis. no. 32 atau P: 72 cm"></label>
+          <label class="f"><div class="lbl">Ukuran sepatu</div>
+            <input type="text" id="sepatu" placeholder="mis. 41 (26,5 cm)"></label>
+        </div>
+        <div class="row c2">
+          <label class="f"><div class="lbl">Bordir / sulam</div>
+            <select id="bordir"></select></label>
+          <label class="f"><div class="lbl">Nama untuk bordir <span class="opt">maks. 20 karakter</span></div>
+            <input type="text" id="namaBordir" maxlength="22" placeholder="terisi otomatis dari nama">
+            <div class="kv"><span>Pratinjau: <b id="bordirPrev">—</b></span></div></label>
+        </div>
+        <label class="f"><div class="lbl">Alamat pengiriman <span class="opt">opsional — bila dikirim ke kantor/perpustakaan</span></div>
+          <textarea id="alamat" placeholder="Perpustakaan …, Jl. …, Kel./Desa, Kec., Kabupaten/Kota, Kode Pos"></textarea></label>
+        <label class="f"><div class="lbl">Catatan untuk panitia</div>
+          <textarea id="catatan" placeholder="mis. ukuran XXL di kantor tinggal 2, minta warna dasar lain, alergi bahan polyester, dll."></textarea></label>
+        <label class="f" style="margin-bottom:4px">
+          <div class="switch"><input type="checkbox" id="setuju">
+            <span>Saya memastikan data sudah benar dan memahami bahwa ukuran di luar size chart dapat menambah waktu/biaya produksi. <span class="req">wajib</span></span></div>
+        </label>
+        <div id="errBox"></div>
+        <div class="actions" style="margin-top:14px">
+          <button class="btn p" type="submit" id="btnKirim">Kirim data ukuran</button>
+          <button class="btn s" type="button" id="btnIsi">Isi contoh untuk uji coba</button>
+          <span class="mini" id="statusKirim"></span>
+        </div>
+      </section>
+    </form>
+
+    <!-- SUKSES -->
+    <div class="card hide" id="viewSukses">
+      <h2><span class="num" style="background:#1a7f5c">✓</span> Data tersimpan</h2>
+      <div class="info" id="suksesIsi"></div>
+      <div id="suksesWarn"></div>
+      <div class="actions" style="margin-top:14px">
+        <button class="btn s" type="button" id="btnUbahLagi">Perbaiki jawaban saya</button>
+        <button class="btn s" type="button" onclick="window.print()">Cetak / simpan PDF</button>
+        <button class="btn s" type="button" id="btnBaru">Isi untuk orang lain</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN ==================== -->
+  <div id="viewAdmin" class="hide">
+    <div class="card" id="adminLogin">
+      <h2><span class="num">🔑</span> Halaman rekap panitia</h2>
+      <p class="hint">Masukkan token admin (nilai <code>ADMIN_TOKEN</code> di Config.gs). Contoh akses:
+        <code>…/exec?view=admin&amp;token=<i>token</i></code></p>
+      <label class="f"><div class="lbl">Token</div><input type="text" id="token"></label>
+      <div class="actions"><button class="btn p" type="button" id="btnLogin">Masuk</button>
+        <span class="mini">Di mode pratinjau browser, token apa pun diterima.</span></div>
+    </div>
+
+    <div id="adminPanel" class="hide">
+      <div class="card">
+        <div class="actions" style="justify-content:space-between;margin:0 0 12px">
+          <h2 style="margin:0"><span class="num">📊</span> Rekap &amp; kendali form</h2>
+          <div class="actions">
+            <button class="btn sm s" type="button" id="btnRefresh">Muat ulang</button>
+            <button class="btn sm s" type="button" id="btnCsv">Unduh CSV (penjahit)</button>
+            <button class="btn sm s" type="button" id="btnDoc">Rekap Google Doc</button>
+          </div>
+        </div>
+        <div class="grid-adm" id="adminStats"></div>
+        <div class="actions">
+          <label class="switch"><input type="checkbox" id="swTutup"><span>Tutup form (hentikan pengiriman baru)</span></label>
+        </div>
+        <label class="f" style="margin:12px 0 0"><div class="lbl">Pengumuman untuk pengisi form</div>
+          <input type="text" id="catatanForm" placeholder="mis. ukuran di luar XS–4XL dikoordinasikan terpisah dengan penjahit"></label>
+        <div class="actions" style="margin-top:10px">
+          <button class="btn sm p" type="button" id="btnSimpanSetting">Simpan pengumuman</button>
+          <button class="btn sm s" type="button" id="btnReminder">Preview pengingat (dry-run)</button>
+          <button class="btn sm s" type="button" id="btnReminderKirim">Kirim pengingat via email</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2><span class="num">Σ</span> Distribusi ukuran</h2>
+        <div class="row c2" style="gap:0 22px">
+          <div><div class="lbl">Per ukuran</div><div class="bars" id="barUkuran"></div></div>
+          <div><div class="lbl">Per wilayah (10 besar)</div><div class="bars" id="barWilayah"></div></div>
+        </div>
+        <div class="kv" id="barLain"></div>
+      </div>
+
+      <div class="card">
+        <div class="actions" style="justify-content:space-between;margin:0 0 10px">
+          <h2 style="margin:0"><span class="num">☑</span> Jawaban masuk</h2>
+          <div class="actions">
+            <input type="text" id="cari" placeholder="cari nama / wilayah…" style="width:190px;padding:8px 10px">
+            <select id="fUkuran" style="width:auto;padding:8px 10px"><option value="">Semua ukuran</option></select>
+            <select id="fStatus" style="width:auto;padding:8px 10px"><option value="">Semua status</option></select>
+            <label class="switch"><input type="checkbox" id="fBelum"><span>Belum mengisi</span></label>
+          </div>
+        </div>
+        <div class="scroll"><table id="tabel"><thead></thead><tbody></tbody></table></div>
+        <p class="mini" id="tabelInfo"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+/* ==========================================================================
+   Lapisan transpor: google.script.run bila berjalan di Apps Script,
+   Mock (localStorage) bila dibuka di browser biasa untuk pratinjau.
+   ========================================================================== */
+var SERVER = { view: '<?= view ?>', admin: '<?= tokenOk ?>', token: '<?= token ?>' };
+if (SERVER.view.charAt(0) === '<') {            // mode pratinjau browser (di luar Apps Script)
+  var qs = new URLSearchParams(location.search);
+  SERVER.view = qs.get('view') === 'admin' ? 'admin' : 'form';
+  SERVER.admin = '1'; SERVER.token = qs.get('token') || 'preview';
+}
+var TOKEN = SERVER.token || '';
+function tk() { return ($('token') && $('token').value) || TOKEN || 'preview'; }
+var HAS_GAS = !!(window.google && google.script && google.script.run);
+
+function callGas(fn, args) {
+  return new Promise(function (resolve, reject) {
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(function (e) { reject(new Error((e && e.message) || String(e))); })
+      [fn].apply(null, args || []);
+  });
+}
+var api = {};
+['apiBootstrap','apiCariNama','apiHitungUkuran','apiKirim','apiAdminData','apiAdminUbah',
+ 'apiAdminHapus','apiAdminToggleForm','apiAdminCsv','apiAdminDoc','apiAdminReminder'].forEach(function (n) {
+  api[n] = function () {
+    var a = [].slice.call(arguments);
+    return HAS_GAS ? callGas(n, a) : Mock[n].apply(Mock, a);
+  };
+});
+
+/* ==========================================================================
+   MOCK — hanya untuk pratinjau lokal (tidak dipakai di Apps Script)
+   ========================================================================== */
+var MOCK_CHART = [
+  {ukuran:'XS',dada:[84,90],panjang:[62,65],bahu:40,bb:[40,48]},
+  {ukuran:'S',dada:[90,96],panjang:[65,68],bahu:42,bb:[48,57]},
+  {ukuran:'M',dada:[96,102],panjang:[68,71],bahu:44,bb:[57,66]},
+  {ukuran:'L',dada:[102,108],panjang:[71,73],bahu:46,bb:[66,76]},
+  {ukuran:'XL',dada:[108,114],panjang:[73,75],bahu:48,bb:[76,86]},
+  {ukuran:'XXL',dada:[114,122],panjang:[75,77],bahu:50,bb:[86,96]},
+  {ukuran:'XXXL',dada:[122,130],panjang:[77,79],bahu:52,bb:[96,106]},
+  {ukuran:'4XL',dada:[130,138],panjang:[79,81],bahu:54,bb:[106,116]}
+];
+var MOCK_NAMA = [
+  ['Siti Nurhaliza','Semarang','Ketua Cabang','081234567890','siti@example.com'],
+  ['Budi Santoso','Surakarta','Sekretaris','081234567891',''],
+  ['Rina Wulandari','Banyumas','Bendahara','081234567892',''],
+  ['Agus Priyanto','Purwokerto','Koordinator Perpustakaan Sekolah','081234567893',''],
+  ['Dewi Lestari','Magelang','Anggota','081234567894',''],
+  ['Mohammad Fauzan','Brebes','Anggota','081234567895',''],
+  ['Nur Aisyah','Kudus','Anggota','081234567896',''],
+  ['Tri Handoko','Salatiga','Div. Pengembangan Koleksi','081234567897','']
+];
+var Mock = (function () {
+  var K = 'ipi-seragam-mock';
+  function db() { try { return JSON.parse(localStorage.getItem(K)) || {rows:[],set:{}}; } catch (e) { return {rows:[],set:{}}; } }
+  function save(d) { localStorage.setItem(K, JSON.stringify(d)); }
+  function key(s) { return String(s||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+  function cari(nm) { var d = db(); return d.rows.filter(function (r) { return key(r['Nama']) === key(nm); })[0]; }
+  function hitung(inp) {
+    var dada = parseFloat(inp.dada)||0, bb = parseFloat(inp.bb)||0, alasan = [], cand = [];
+    if (dada) {
+      MOCK_CHART.forEach(function(c,i){ if (dada>=c.dada[0]&&dada<=c.dada[1]) cand.push(i); });
+      cand.sort(function(a,b){
+        var ja=Math.abs(dada-(MOCK_CHART[a].dada[0]+MOCK_CHART[a].dada[1])/2);
+        var jb=Math.abs(dada-(MOCK_CHART[b].dada[0]+MOCK_CHART[b].dada[1])/2);
+        return ja!==jb ? ja-jb : b-a; });
+      if (cand.length) {
+        var i = cand[0];
+        return {ukuran:MOCK_CHART[i].ukuran, alternatif:(MOCK_CHART[i+1]||{}).ukuran||'',
+          keyakinan:'tinggi',
+          alasan:['Lingkar dada '+dada+' cm masuk rentang '+MOCK_CHART[i].dada[0]+'–'+MOCK_CHART[i].dada[1]+' cm.'],
+          rentangDada:MOCK_CHART[i].dada};
+      }
+      var best=null; MOCK_CHART.forEach(function(c,i){ var m=(c.dada[0]+c.dada[1])/2, dd=Math.abs(dada-m); if(!best||dd<best.d) best={u:c.ukuran,d:dd,i:i}; });
+      return {ukuran:best.u, alternatif:'Ukuran Khusus (Custom)', keyakinan:'sedang',
+        alasan:['Lingkar dada '+dada+' cm di luar rentang size chart standar.'], rentangDada:MOCK_CHART[best.i].dada};
+    }
+    if (bb) {
+      var h = MOCK_CHART.filter(function(c){ return bb>=c.bb[0]&&bb<=c.bb[1]; })[0];
+      return {ukuran:h?h.ukuran:'', alternatif:h?((MOCK_CHART[MOCK_CHART.indexOf(h)+1]||{}).ukuran||''):'',
+        keyakinan:'sedang', alasan:['Diperkirakan dari berat badan '+bb+' kg.'], rentangDada:h?h.dada:null};
+    }
+    return {ukuran:'',alternatif:'',keyakinan:'rendah',alasan:['Belum ada pengukuran.']};
+  }
+  var P = function (o) { return Promise.resolve(o); };
+  return {
+    apiBootstrap: function () {
+      var st = db().set || {};
+      return P({ok:true, app:{organisasi:'Ikatan Pustakawan Indonesia (IPI) Jawa Tengah',
+        kegiatan:'Pendataan Ukuran Seragam Organisasi', periode:'Tahun 2026',
+        pic:'Pratinjau lokal — setelah deploy, ganti dengan kontak panitia',
+        logo:'', tenggat:'20 September 2026', tutup:st.tutup_form === 'true', bolehUbah:true, wajibList:true,
+        catatan:st.catatan_form || '[Mode pratinjau] Data disimpan di browser ini saja, belum ke Google Sheets.',
+        modelBaju:['Lengan Panjang','Lengan Pendek','Lengan Panjang + Pendek (2 set)'],
+        ukuran:['XS','S','M','L','XL','XXL','XXXL','4XL','Ukuran Khusus (Custom)'],
+        jenisKelamin:['Laki-laki','Perempuan'],
+        bordir:['Ya, bordir nama + logo IPI','Ya, logo IPI saja','Tanpa bordir']},
+        sizeChart:MOCK_CHART,
+        daftar:MOCK_NAMA.map(function(n){ return {n:n[0],w:n[1],j:n[2],wa:n[3],e:n[4],c:''}; }),
+        saya:''});
+    },
+    apiCariNama: function (nama) {
+      var d = MOCK_NAMA.filter(function(n){ return key(n[0])===key(nama); })[0];
+      var r = cari(nama);
+      return P({ditemukan:!!d, data:d?{w:d[1],j:d[2],wa:d[3],e:d[4]}:null,
+        adaJawaban:!!r, bolehUbah:true, jawaban:r||null});
+    },
+    apiHitungUkuran: function (inp) { return P(hitung(inp||{})); },
+    apiKirim: function (p) {
+      var d = db(), nama = String(p['Nama']||'').trim();
+      if (nama.length<3) return P({ok:false,pesan:'Nama belum diisi.'});
+      if (!MOCK_NAMA.some(function(n){ return key(n[0])===key(nama); }))
+        return P({ok:false,pesan:'Nama tidak ditemukan di daftar anggota (mode pratinjau memakai 8 nama contoh).'});
+      var sug = hitung({dada:p['Lingkar Dada (cm)'],bb:p['Berat Badan (kg)'],tb:p['Tinggi Badan (cm)']});
+      var lamaIdx = -1;
+      d.rows.forEach(function(r,i){ if (key(r['Nama'])===key(nama)) lamaIdx=i; });
+      var row = JSON.parse(JSON.stringify(p));
+      row['Timestamp'] = new Date().toLocaleString('id-ID');
+      row['Rekomendasi Sistem'] = [sug.ukuran,sug.keyakinan].filter(Boolean).join(' | ');
+      row['Status'] = 'Terkirim'; row['Sumber']='Preview';
+      if (lamaIdx>=0) d.rows[lamaIdx]=row; else d.rows.push(row);
+      save(d);
+      return P({ok:true,mode:lamaIdx>=0?'update':'insert',
+        pesan:'(Pratinjau) '+(lamaIdx>=0?'Jawaban diperbarui.':'Data terkirim.'),
+        peringatan:p['Lingkar Dada (cm)']?[]:['Belum ada pengukuran — risiko salah ukuran lebih besar.'],
+        rekap:{nama:row['Nama'],ukuran:row['Ukuran'],model:row['Model Baju'],
+          waktu:row['Timestamp'],bordir:row['Bordir']||'',status:'Terkirim'}});
+    },
+    apiAdminData: function () {
+      var d = db(), rows = d.rows.map(function(r,i){ var o={_row:i+1}; for(var k in r) o[k]=r[k]; return o; });
+      var perUkuran={},perWilayah={},perModel={},perKelamin={};
+      rows.forEach(function(r){
+        perUkuran[r['Ukuran']||'-']=(perUkuran[r['Ukuran']||'-']||0)+1;
+        perWilayah[r['Kabupaten/Kota']||'-']=(perWilayah[r['Kabupaten/Kota']||'-']||0)+1;
+        perModel[r['Model Baju']||'-']=(perModel[r['Model Baju']||'-']||0)+1;
+        perKelamin[r['Jenis Kelamin']||'-']=(perKelamin[r['Jenis Kelamin']||'-']||0)+1;
+      });
+      var sudah={}; rows.forEach(function(r){ sudah[key(r['Nama'])]=1; });
+      var belum = MOCK_NAMA.filter(function(n){ return !sudah[key(n[0])]; })
+        .map(function(n){ return {nama:n[0],wilayah:n[1],jabatan:n[2],wa:n[3],email:n[4]}; });
+      return P({ok:true, headers:['Nama','Kabupaten/Kota','Jenis Kelamin','Model Baju','Ukuran',
+        'Lingkar Dada (cm)','Tinggi Badan (cm)','Berat Badan (kg)','Bordir','No. WhatsApp','Status','Timestamp'],
+        rows:rows, chart:MOCK_CHART.map(function(c){return c.ukuran;}),
+        ringkas:{total:rows.length,anggota:MOCK_NAMA.length,belum:belum.length,
+          perluKonfirmasi:rows.filter(function(r){return r['Status']==='Perlu Konfirmasi';}).length,
+          updateTerakhir:rows.length?rows[rows.length-1]['Timestamp']:'-'},
+        distribusi:{ukuran:perUkuran,wilayah:perWilayah,model:perModel,kelamin:perKelamin},
+        daftarBelum:belum, settings:d.set, formTutup:!!d.set.tutup_form,
+        statusList:['Terkirim','Diverifikasi','Perlu Konfirmasi','Sudah Diproduksi']});
+    },
+    apiAdminUbah: function (token, row, kolom, nilai) {
+      var d = db(); if (d.rows[row-1]) { d.rows[row-1][kolom]=nilai; save(d); } return P({ok:true});
+    },
+    apiAdminHapus: function (token, row) { var d = db(); d.rows.splice(row-1,1); save(d); return P({ok:true}); },
+    apiAdminToggleForm: function (token, tutup, catatan) {
+      var d = db(); d.set.tutup_form = tutup ? 'true' : 'false';
+      if (catatan !== undefined && catatan !== null) d.set.catatan_form = catatan;
+      save(d); return P({ok:true, tutup:!!tutup});
+    },
+    apiAdminCsv: function (token) { return P({ok:true,url:'',jumlah:db().rows.length,csv:''}); },
+    apiAdminDoc: function (token) { return P({ok:true,url:'',pesan:'Rekap Google Doc hanya tersedia setelah deploy di Apps Script.'}); },
+    apiAdminReminder: function (token, kirim) {
+      var d = db(), sudah={}; d.rows.forEach(function(r){ sudah[key(r['Nama'])]=1; });
+      var belum = MOCK_NAMA.filter(function(n){ return !sudah[key(n[0])]; });
+      return P({ok:true, pesan:'Anggota belum mengisi: '+belum.length+
+        '\n· '+belum.map(function(n){return n[0]+' ('+n[1]+')';}).join('\n· ')+
+        '\n\n(Pratinjau) Email hanya dikirim setelah deploy.'+
+        (kirim?'\nContoh pesan reminder siap dikirim ke '+(belum.length-1)+' alamat email.':'')});
+    }
+  };
+})();
+
+/* ==========================================================================
+   STATE & HELPERS
+   ========================================================================== */
+var S = { boot:null, chart:[], saran:null, adaJawaban:false, mode:null, bedaOk:false,
+  jawabanLama:null, bolehUbah:false, daftar:[] };
+var $ = function (id) { return document.getElementById(id); };
+var el = function (tag, cls, txt) { var n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function chartFor(u){ var k=String(u||'').toLowerCase(); return S.chart.filter(function(c){return String(c.ukuran).toLowerCase()===k;})[0]; }
+function toast(node, msg, cls) { node.innerHTML = ''; if (!msg) return;
+  (Array.isArray(msg)?msg:[msg]).forEach(function(m){ node.appendChild(el('div', cls||'warn', m)); }); }
+
+/* ==========================================================================
+   BOOT
+   ========================================================================== */
+function boot() {
+  api.apiBootstrap().then(function (b) {
+    S.boot = b;
+    S.chart = b.sizeChart || [];
+    var a = b.app || {};
+    $('judul').textContent = a.kegiatan || 'Data Ukuran Seragam';
+    $('subjudul').textContent = (a.organisasi || '') + (a.periode ? ' · ' + a.periode : '');
+    if (a.logo) { var im = el('img'); im.src = a.logo; im.alt = 'logo';
+      im.style.cssText = 'width:46px;height:46px;border-radius:12px;object-fit:cover;background:#fff';
+      $('lencana').replaceWith(im); }
+    if (a.tenggat) { $('chipTenggat').classList.remove('hide'); $('chipTenggat').textContent = 'Batas isi: ' + a.tenggat; }
+    $('foot').textContent = (a.pic ? 'Narahubung: ' + a.pic + ' · ' : '') +
+      'Data ini hanya digunakan untuk keperluan produksi seragam organisasi.';
+    if (a.catatan) { $('bannerCatatan').classList.remove('hide'); $('bannerCatatanTxt').textContent = a.catatan; }
+    if (a.tutup) {
+      $('bannerTutup').classList.remove('hide');
+      $('bannerTutupTxt').textContent = ' Pengisian/revisi tidak diterima lagi. Hubungi panitia: ' + (a.pic||'');
+      $('formSeragam').classList.add('hide');
+    }
+    isiDaftar(b.daftar || []);
+    buatPill('kelamin', a.jenisKelamin || [], 'kelamin');
+    buatCardRadio('modelSet', a.modelBaju || [], 'model', 'Lengan panjang = batik resmi &amp; kemeja harian. Pilih 2 set bila Anda butuh keduanya.');
+    isiSizes();
+    isiSelect('cadangan', (a.ukuran||[]).filter(function(u){return !/custom/i.test(u);}), true);
+    isiSelect('bordir', a.bordir || [], true);
+    if ($('token')) $('token').value = TOKEN === 'preview' ? '' : TOKEN;
+    if (SERVER.view === 'admin') masukAdmin();
+  }).catch(function (e) {
+    $('subjudul').textContent = 'Gagal memuat data: ' + e.message;
+  });
+}
+function isiDaftar(d) {
+  var dl = $('daftarNama'); dl.innerHTML = '';
+  d.forEach(function (x) {
+    var o = el('option'); o.value = x.n;
+    o.label = x.n + (x.w ? ' — ' + x.w : '');
+    o.textContent = x.n + (x.w ? ' · ' + x.w : '') + (x.j ? ' · ' + x.j : '');
+    dl.appendChild(o);
+  });
+  S.daftar = d;
+}
+function isiSelect(id, arr, kosong) {
+  var s = $(id); if (!s) return;
+  s.innerHTML = '';
+  if (kosong) { var o0 = el('option', null, '— pilih —'); o0.value = ''; s.appendChild(o0); }
+  arr.forEach(function (v) { var o = el('option'); o.value = v; o.textContent = v; s.appendChild(o); });
+}
+function buatPill(id, arr, name) {
+  var box = $(id); box.innerHTML = '';
+  arr.forEach(function (v, i) {
+    var l = el('label', 'pill'); var r = el('input'); r.type='radio'; r.name=name; r.value=v;
+    l.appendChild(r); l.appendChild(document.createTextNode(v));
+    l.onclick = function(){ [].forEach.call(box.children, function(c){c.classList.remove('on');}); l.classList.add('on'); live(); };
+    box.appendChild(l);
+  });
+}
+function buatCardRadio(id, arr, name, hint) {
+  var box = $(id); box.innerHTML = '';
+  arr.forEach(function (v) {
+    var l = el('label', 'size'); l.style.textAlign = 'left';
+    var r = el('input'); r.type='radio'; r.name=name; r.value=v; r.style.display='none';
+    l.appendChild(r); l.appendChild(el('b', null, v));
+    l.appendChild(el('i', null, name==='model' ? (i_hint(v)) : ''));
+    l.onclick = function(){ [].forEach.call(box.children, function(c){c.classList.remove('on');}); l.classList.add('on'); };
+    box.appendChild(l);
+  });
+  if (hint) box.insertAdjacentElement('afterend', el('p','mini',hint));
+}
+function i_hint(v){ return /2 set/i.test(v) ? 'opsi paling hemat untuk rapat & harian'
+  : /pendek/i.test(v) ? 'kemeja harian, ruang AC' : 'batik resmi / agenda formal'; }
+function isiSizes() {
+  var box = $('sizeSet'); box.innerHTML = '';
+  var list = (S.boot.app.ukuran || []).slice();
+  if (!list.length) list = S.chart.map(function(c){return c.ukuran;});
+  list.forEach(function (v) {
+    var c = chartFor(v), l = el('label','size'), r = el('input');
+    r.type='radio'; r.name='ukuran'; r.value=v; r.style.display='none';
+    l.appendChild(r); l.appendChild(el('b',null,v));
+    l.appendChild(el('i',null, c ? 'dada ' + c.dada[0] + '–' + c.dada[1] : /custom/i.test(v) ? 'ukur khusus' : ''));
+    l.onclick = function () {
+      [].forEach.call(box.children, function (x) { x.classList.remove('on'); });
+      l.classList.add('on'); live();
+    };
+    box.appendChild(l);
+  });
+}
+
+/* ==========================================================================
+   INTERAKSI: cari nama → prefill, saran ukuran live
+   ========================================================================== */
+function pickNama() {
+  var nama = $('nama').value.trim();
+  var info = $('namaInfo'); info.innerHTML = '';
+  if (nama.length < 3) { $('nama').nextElementSibling; return; }
+  var d = (S.daftar || []).filter(function (x) { return x.n.toLowerCase() === nama.toLowerCase(); })[0];
+  if (d) {
+    if (!$('wilayah').value) $('wilayah').value = d.w || '';
+    if (!$('jabatan').value) $('jabatan').value = d.j || '';
+    if (!$('wa').value) $('wa').value = d.wa || '';
+    if (!$('email').value) $('email').value = d.e || '';
+    if (!$('namaBordir').value) isiBordir();
+    if (d.w) { info.appendChild(el('span', null, 'Wilayah: ')); info.appendChild(el('b', null, d.w)); }
+    if (d.j) { info.appendChild(el('span', null, 'Jabatan: ')); info.appendChild(el('b', null, d.j)); }
+    if (d.c) { info.appendChild(el('span', null, 'Catatan panitia: ')); info.appendChild(el('b', null, d.c)); }
+  } else {
+    info.appendChild(el('span', null, 'Nama belum ada di daftar — pastikan ejaan sama, atau minta panitia menambahkannya.'));
+  }
+  api.apiCariNama(nama).then(function (r) {
+    S.adaJawaban = !!(r.adaJawaban && r.jawaban);
+    if (!S.adaJawaban) { $('bannerLama').classList.add('hide'); return; }
+    $('bannerLama').classList.remove('hide');
+    var i = $('bannerLamaInfo'); i.innerHTML = '';
+    ['Dikirim: ' + (r.jawaban['Timestamp']||'-'), 'Ukuran: ' + (r.jawaban['Ukuran']||'-'),
+     'Model: ' + (r.jawaban['Model Baju']||'-'), 'Status: ' + (r.jawaban['Status']||'-')]
+      .forEach(function(t){ i.appendChild(el('span',null,t)); });
+    S.jawabanLama = r.jawaban; S.bolehUbah = !!r.bolehUbah;
+    toast($('namaInfo'), S.bolehUbah
+      ? 'Nama ini sudah punya data. Tekan "Muat & ubah jawaban saya" di atas untuk memperbaiki (data lama tertimpa).'
+      : 'Nama ini sudah mengirim dan penguncian revisi aktif — hubungi panitia untuk mengubah.', 'info');
+  });
+}
+function prefill(j) {
+  var m = {wilayah:'Kabupaten/Kota',jabatan:'Jabatan',email:'Email',wa:'No. WhatsApp',dada:'Lingkar Dada (cm)',
+    pinggang:'Lingkar Pinggang (cm)',tb:'Tinggi Badan (cm)',bb:'Berat Badan (kg)',celana:'Ukuran Celana/Rok',
+    sepatu:'Ukuran Sepatu (cm/no)',namaBordir:'Nama untuk Bordir',alamat:'Alamat Pengiriman',
+    catatan:'Catatan',cadangan:'Ukuran Cadangan',potongan:'Rekomendasi Sistem'};
+  Object.keys(m).forEach(function (id) { if (j[m[id]] != null && m[id] !== 'Rekomendasi Sistem') $(id).value = j[m[id]]; });
+  setRadio('kelamin', j['Jenis Kelamin']); setRadio('model', j['Model Baju']); setRadio('ukuran', j['Ukuran']);
+  if (j['Bordir']) $('bordir').value = j['Bordir'];
+  live();
+}
+function setRadio(name, val) {
+  var box = $(name==='kelamin'?'kelamin':(name==='model'?'modelSet':'sizeSet'));
+  if (!box) return;
+  [].forEach.call(box.querySelectorAll('input'), function (r) {
+    var lab = r.closest('.pill') || r.closest('.size');
+    if (r.value === val) { r.checked = true; lab && lab.classList.add('on'); }
+    else { r.checked = false; lab && lab.classList.remove('on'); }
+  });
+}
+function getRadio(name) {
+  var box = $(name==='kelamin'?'kelamin':(name==='model'?'modelSet':'sizeSet'));
+  var r = box && box.querySelector('input:checked'); return r ? r.value : '';
+}
+function isiBordir() {
+  var n = $('nama').value.trim().replace(/\s+/g,' ');
+  $('namaBordir').value = n ? n.split(' ').slice(0,2).join(' ').toUpperCase().slice(0,20) : '';
+  $('bordirPrev').textContent = $('namaBordir').value || '—';
+}
+function payload() {
+  return {
+    'Nama': $('nama').value.trim(), 'Kabupaten/Kota': $('wilayah').value.trim(),
+    'Jabatan': $('jabatan').value.trim(), 'Jenis Kelamin': getRadio('kelamin'),
+    'Model Baju': getRadio('model'), 'Ukuran': getRadio('ukuran'),
+    'Ukuran Cadangan': $('cadangan').value, 'Lingkar Dada (cm)': $('dada').value,
+    'Lingkar Pinggang (cm)': $('pinggang').value, 'Tinggi Badan (cm)': $('tb').value,
+    'Berat Badan (kg)': $('bb').value, 'Ukuran Celana/Rok': $('celana').value.trim(),
+    'Ukuran Sepatu (cm/no)': $('sepatu').value.trim(), 'Bordir': $('bordir').value,
+    'Nama untuk Bordir': $('namaBordir').value.trim(), 'No. WhatsApp': $('wa').value.trim(),
+    'Email': $('email').value.trim(), 'Alamat Pengiriman': $('alamat').value.trim(),
+    'Catatan': [$('catatan').value.trim(), $('potongan').value.trim()].filter(Boolean).join(' | '),
+    '_bedaTerkonfirmasi': S.bedaOk
+  };
+}
+function validasiDepan(p) {
+  var e = [];
+  if (p['Nama'].length < 3) e.push('Nama belum dipilih dari daftar.');
+  if (!p['Jenis Kelamin']) e.push('Jenis kelamin belum dipilih.');
+  if (!p['Model Baju']) e.push('Model baju belum dipilih.');
+  if (!p['Ukuran']) e.push('Ukuran belum dipilih.');
+  if (!p['No. WhatsApp']) e.push('No. WhatsApp wajib diisi untuk konfirmasi ukuran.');
+  if (!$('setuju').checked) e.push('Centang pernyataan keakuratan data sebelum mengirim.');
+  return e;
+}
+function live() {
+  var p = payload();
+  api.apiHitungUkuran({dada:p['Lingkar Dada (cm)'],bb:p['Berat Badan (kg)'],tb:p['Tinggi Badan (cm)']})
+    .then(function (r) {
+      S.saran = r;
+      var box = $('saranBox');
+      if (!r.ukuran && !r.alasan.length) { box.classList.add('hide'); return; }
+      box.classList.remove('hide'); box.innerHTML = '';
+      var h = el('div');
+      h.appendChild(el('b', null, r.ukuran ? 'Rekomendasi sistem: ' + r.ukuran + (r.alternatif ? ' (cadangan ' + r.alternatif + ')' : '')
+        : 'Rekomendasi belum bisa dihitung'));
+      box.appendChild(h);
+      var ul = el('div','mini'); r.alasan.forEach(function(a){ ul.appendChild(el('div',null,'• '+a)); });
+      box.appendChild(ul);
+      if (r.rentangDada) box.appendChild(el('div','mini','Rentang ' + r.ukuran + ': dada ' + r.rentangDada[0] + '–' + r.rentangDada[1] + ' cm.'));
+      if (r.ukuran && r.ukuran !== p['Ukuran']) {
+        var bt = el('button','btn sm s','Pakai rekomendasi ini'); bt.type='button';
+        bt.onclick = function(){ setRadio('ukuran', r.ukuran); live(); };
+        box.appendChild(el('div','', '')).appendChild(bt);
+      }
+      // peringatan silang
+      var w = [];
+      var c = chartFor(p['Ukuran']);
+      var dada = parseFloat(p['Lingkar Dada (cm)']);
+      if (c && dada && (dada < c.dada[0] || dada > c.dada[1])) {
+        w.push('Ukuran ' + p['Ukuran'] + ' untuk dada ' + c.dada[0] + '–' + c.dada[1] + ' cm; dada Anda ' + dada +
+          ' cm → disarankan ' + r.ukuran + '.');
+      }
+      toast($('warnLive'), w, 'warn');
+    }).catch(function(){ $('saranBox').classList.add('hide'); });
+}
+
+/* ==========================================================================
+   KIRIM
+   ========================================================================== */
+function kirim() {
+  var p = payload(), err = validasiDepan(p);
+  if (err.length) { toast($('errBox'), err, 'err'); $('errBox').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  toast($('errBox'), null);
+  $('btnKirim').disabled = true; $('statusKirim').textContent = 'Mengirim…';
+  api.apiKirim(p).then(function (r) {
+    $('btnKirim').disabled = false; $('statusKirim').textContent = '';
+    if (r.ok) { tampilSukses(r); S.bedaOk = false; return; }
+    if (r.butuhKonfirmasi) {
+      S.bedaOk = true;
+      toast($('errBox'), [r.pesan], 'warn');
+      $('errBox').appendChild(el('div','', '')).appendChild(buatBtnKonfirmasi());
+      $('errBox').scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    toast($('errBox'), [r.pesan].concat(r.kesalahan||[]), 'err');
+    $('errBox').scrollIntoView({behavior:'smooth',block:'center'});
+  }).catch(function (e) {
+    $('btnKirim').disabled = false; $('statusKirim').textContent = '';
+    toast($('errBox'), ['Gagal mengirim: ' + e.message + '. Coba lagi; bila terus gagal, hubungi panitia.'], 'err');
+  });
+}
+function buatBtnKonfirmasi() {
+  var b = el('button','btn sm p','Ya, ukuran saya sudah benar');
+  b.type = 'button'; b.textContent = 'Ya, ukuran saya sudah benar — kirim';
+  b.onclick = kirim; return b;
+}
+function tampilSukses(r) {
+  $('formSeragam').classList.add('hide'); $('bannerLama').classList.add('hide');
+  var box = $('suksesIsi'); box.innerHTML = '';
+  var k = r.rekap || {};
+  var t = el('div'); t.appendChild(el('b',null,'Terima kasih, ' + (k.nama||'Bapak/Ibu') + '!' + ' ' + (r.pesan||'')));
+  box.appendChild(t);
+  var grid = el('div','row c2'); grid.style.marginTop = '10px';
+  [['Nama',k.nama],['Kabupaten/Kota',$('wilayah').value],['Ukuran',k.ukuran],['Model baju',k.model],
+   ['Lingkar dada', $('dada').value ? $('dada').value + ' cm' : '—'],['Bordir',k.bordir||'—'],
+   ['Waktu',k.waktu],['Status',k.status]].forEach(function (kv) {
+    var d = el('div','info'); d.style.padding='8px 11px';
+    d.appendChild(el('div','mini',kv[0])); d.appendChild(el('b',null, kv[1]||'—')); grid.appendChild(d);
+  });
+  box.appendChild(grid);
+  toast($('suksesWarn'), r.peringatan || [], 'warn');
+  if (r.peringatan && r.peringatan.length) {
+    $('suksesWarn').insertAdjacentHTML('afterbegin','<div style="font-weight:600;margin-bottom:4px">Panitia menandai isian Anda untuk dikonfirmasi:</div>');
+  }
+  $('viewSukses').classList.remove('hide');
+  $('viewSukses').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ==========================================================================
+   ADMIN
+   ========================================================================== */
+var A = { data:null };
+function masukAdmin() {
+  $('viewForm').classList.add('hide');
+  $('adminPanel').classList.add('hide');
+  $('adminLogin').classList.remove('hide');
+  if (SERVER.view !== 'admin') { $('adminLogin').classList.add('hide'); $('viewForm').classList.remove('hide'); }
+  if (SERVER.admin === '1') bukaAdmin();
+}
+function bukaAdmin() { $('adminLogin').classList.add('hide'); $('adminPanel').classList.remove('hide'); muatAdmin(); }
+function muatAdmin() {
+  var t = tk();
+  api.apiAdminData(t).then(function (d) { A.data = d; renderAdmin(d); })
+   .catch(function (e) { $('tabelInfo').textContent = 'Gagal: ' + e.message; });
+}
+function renderAdmin(d) {
+  var st = $('adminStats'); st.innerHTML = '';
+  var persen = d.ringkas.anggota ? Math.round(d.ringkas.total / d.ringkas.anggota * 100) : 0;
+  [['Terisi', d.ringkas.total + ' / ' + d.ringkas.anggota, persen + '% kelengkapan'],
+   ['Belum mengisi', d.ringkas.belum, 'akan diingatkan panitia'],
+   ['Perlu dikonfirmasi', d.ringkas.perluKonfirmasi, 'peringatan validasi ukuran'],
+   ['Update terakhir', d.ringkas.updateTerakhir || '-', '']
+  ].forEach(function (x) {
+    var c = el('div','stat'); c.appendChild(el('b',null,String(x[1]))); c.appendChild(el('span',null,x[0]));
+    if (x[2]) c.appendChild(el('div','mini',x[2])); st.appendChild(c);
+  });
+  var bar = st.firstElementChild;
+  if (bar) { var pb = el('div','bar'); var i = el('i'); i.style.width = persen + '%'; pb.appendChild(i); bar.appendChild(pb); }
+
+  $('swTutup').checked = !!d.formTutup;
+  $('catatanForm').value = (d.settings && d.settings.catatan_form) || '';
+
+  renderBars('barUkuran', d.distribusi.ukuran, d.chart);
+  renderBars('barWilayah', d.distribusi.wilayah, null, 10);
+  var lain = $('barLain'); lain.innerHTML = '';
+  Object.keys(d.distribusi.model||{}).forEach(function(k){ lain.appendChild(el('span',null,'🧵 ' + k + ': ' + d.distribusi.model[k])); });
+  Object.keys(d.distribusi.kelamin||{}).forEach(function(k){ lain.appendChild(el('span',null,'👤 ' + k + ': ' + d.distribusi.kelamin[k])); });
+
+  var fu = $('fUkuran'), fs = $('fStatus');
+  isiSelect2(fu, Object.keys(d.distribusi.ukuran||{}).sort(), 'Semua ukuran');
+  isiSelect2(fs, (d.statusList||['Terkirim','Diverifikasi','Perlu Konfirmasi','Sudah Diproduksi']), 'Semua status');
+  renderTabel();
+}
+function isiSelect2(sel, arr, first) {
+  sel.innerHTML = ''; sel.appendChild(el('option',null,first)); sel.lastChild.value='';
+  arr.forEach(function(v){ var o=el('option'); o.value=v; o.textContent=v; sel.appendChild(o); });
+}
+function renderBars(id, obj, urutan, max) {
+  var box = $(id); box.innerHTML = '';
+  var keys = urutan ? urutan.filter(function(k){ return obj[k]!=null; })
+                    .concat(Object.keys(obj).filter(function(k){ return urutan.indexOf(k)<0; }))
+                    : Object.keys(obj).sort(function(a,b){ return obj[b]-obj[a]; });
+  if (max) keys = keys.slice(0, max);
+  var top = Math.max(1, keys.reduce(function(m,k){ return Math.max(m, obj[k]||0); }, 0));
+  if (!keys.length) { box.appendChild(el('div','mini','Belum ada data.')); return; }
+  keys.forEach(function (k) {
+    var r = el('div'); r.appendChild(el('span',null,k));
+    var w = el('div'); var i = el('i'); i.style.width = Math.round((obj[k]||0)/top*100) + '%';
+    i.style.display='block'; w.appendChild(i); r.appendChild(w);
+    r.appendChild(el('b',null,String(obj[k]||0))); box.appendChild(r);
+  });
+}
+function renderTabel() {
+  var d = A.data, tabel = $('tabel'), tb = tabel.tBodies[0];
+  if (!tabel.tHead) tabel.createTHead();
+  var thead = tabel.tHead; thead.innerHTML = '';
+  var hr = el('tr'); thead.appendChild(hr);
+  var belum = $('fBelum').checked, q = $('cari').value.trim().toLowerCase();
+  var fu = $('fUkuran').value, fs = $('fStatus').value;
+  tb.innerHTML = '';
+  if (belum) {
+    var hdr = ['Nama','Kabupaten/Kota','Jabatan','WhatsApp','Email','Aksi'];
+    hdr.forEach(function(h){ hr.appendChild(el('th',null,h)); });
+    (d.daftarBelum||[]).forEach(function (x) {
+      if (q && (x.nama+' '+x.wilayah).toLowerCase().indexOf(q) < 0) return;
+      var tr = el('tr');
+      [x.nama,x.wilayah,x.jabatan,x.wa||'-',x.email||'-'].forEach(function(v){ tr.appendChild(el('td',null,v)); });
+      var td = el('td'); var a = el('a','btn sm s','Chat WA'); a.style.textDecoration='none';
+      a.href = 'https://wa.me/' + String(x.wa||'').replace(/\D/g,'').replace(/^0/,'62') +
+        '?text=' + encodeURIComponent('Yth. ' + x.nama + ', mohon mengisi data ukuran seragam IPI Jateng: ' + location.origin + location.pathname);
+      if (!x.wa) { a.style.pointerEvents='none'; a.style.opacity='.5'; }
+      td.appendChild(a); tr.appendChild(td); tb.appendChild(tr);
+    });
+    $('tabelInfo').textContent = (d.daftarBelum||[]).length + ' anggota belum mengisi.';
+    return;
+  }
+  var cols = d.headers;
+  hr.appendChild(el('th',null,'#'));
+  cols.forEach(function(h){ hr.appendChild(el('th',null,h)); });
+  hr.appendChild(el('th',null,'Status')); hr.appendChild(el('th',null,'Aksi'));
+  var n = 0;
+  (d.rows||[]).forEach(function (r, i) {
+    var teks = cols.map(function(c){return r[c]||'';}).join(' ').toLowerCase();
+    if (q && teks.indexOf(q) < 0) return;
+    if (fu && String(r['Ukuran']) !== fu) return;
+    if (fs && String(r['Status']) !== fs) return;
+    n++;
+    var tr = el('tr');
+    tr.appendChild(el('td','mini',String(i+1)));
+    cols.forEach(function (c) {
+      var td = el('td');
+      if (c === 'Ukuran') { var s = el('span','tag g',r[c]||'-'); td.appendChild(s); }
+      else if (c === 'Status') td.appendChild(el('span', 'tag ' + tagKls(r[c]), r[c]||'-'));
+      else { td.textContent = String(r[c]||''); if (c==='Nama') td.style.fontWeight='600'; }
+      tr.appendChild(td);
+    });
+    var tds = el('td'); var sel = el('select');
+    (d.statusList||['Terkirim','Diverifikasi','Perlu Konfirmasi','Sudah Diproduksi']).forEach(function(s){
+      var o = el('option'); o.value=s; o.textContent=s; if (r['Status']===s) o.selected=true; sel.appendChild(o);
+    });
+    sel.style.cssText='padding:4px 6px;font-size:12px;width:auto';
+    sel.onchange = function () {
+      api.apiAdminUbah(tk(), r._row, 'Status', sel.value).then(muatAdmin);
+    };
+    tds.appendChild(sel); tr.appendChild(tds);
+    var tda = el('td'); var hapus = el('button','btn sm s','Hapus'); hapus.type='button';
+    hapus.onclick = function(){ if (confirm('Hapus jawaban ' + r['Nama'] + '?')) {
+        api.apiAdminHapus(tk(), r._row).then(muatAdmin); } };
+    tda.appendChild(hapus); tr.appendChild(tda);
+    tb.appendChild(tr);
+  });
+  $('tabelInfo').textContent = n + ' baris ditampilkan' + (n !== (d.rows||[]).length ? ' dari ' + d.rows.length : '') +
+    ' · klik Status untuk mengubah verifikasi.';
+}
+function tagKls(s){ s=String(s||''); return /verifikasi|produksi/i.test(s)&&!/perlu/i.test(s)?'g':(/perlu/i.test(s)?'y':'o'); }
+
+/* ==========================================================================
+   wiring
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', function () {
+  boot();
+  var t = $('nama');
+  t.addEventListener('change', pickNama);
+  t.addEventListener('blur', pickNama);
+  t.addEventListener('input', function(){ clearTimeout(t._x); t._x = setTimeout(pickNama, 500); });
+  $('dada').addEventListener('input', live); $('bb').addEventListener('input', live);
+  $('tb').addEventListener('input', live); $('pinggang').addEventListener('input', live);
+  $('nama').addEventListener('input', function(){ if (!$('namaBordir').dataset.edit) isiBordir(); });
+  $('namaBordir').addEventListener('input', function(){ $('namaBordir').dataset.edit='1';
+    $('bordirPrev').textContent = $('namaBordir').value.toUpperCase(); });
+  $('formSeragam').addEventListener('submit', function (e) { e.preventDefault(); kirim(); });
+  $('btnIsiUlang').onclick = function () {
+    if (S.jawabanLama) prefill(S.jawabanLama);
+    $('bannerLama').classList.add('hide');
+    $('formSeragam').classList.remove('hide');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  $('btnTutupBanner').onclick = function(){ $('bannerLama').classList.add('hide'); };
+  $('btnUbahLagi').onclick = function(){ $('viewSukses').classList.add('hide'); $('formSeragam').classList.remove('hide'); };
+  $('btnBaru').onclick = function(){
+    $('formSeragam').reset(); $('viewSukses').classList.add('hide'); $('bannerLama').classList.add('hide');
+    ['nama','wilayah','jabatan','wa','email','dada','pinggang','tb','bb','celana','sepatu','namaBordir','alamat','catatan','potongan']
+      .forEach(function(id){ $(id).value = ''; });
+    ['kelamin','modelSet','sizeSet'].forEach(function(id){
+      [].forEach.call($(id).querySelectorAll('input'), function(r){ r.checked=false; });
+      [].forEach.call($(id).children, function(c){ c.classList.remove('on'); });
+    });
+    $('saranBox').classList.add('hide'); toast($('warnLive'), null); toast($('namaInfo'), null);
+    $('formSeragam').classList.remove('hide'); window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('nama').focus();
+  };
+  $('btnIsi').onclick = isiContoh;
+  ['cari','fUkuran','fStatus','fBelum'].forEach(function(id){
+    $(id).addEventListener('input', renderTabel); $(id).addEventListener('change', renderTabel); });
+  $('btnRefresh').onclick = muatAdmin;
+  $('btnLogin').onclick = function(){
+    api.apiAdminData(tk()).then(function(){ bukaAdmin(); })
+      .catch(function(e){ $('adminLogin').appendChild(el('div','err',e.message)); });
+  };
+  $('swTutup').onchange = function(){
+    api.apiAdminToggleForm(tk(), $('swTutup').checked, null).then(function(r){
+      $('swTutup').checked = r.tutup; alert(r.tutup?'Form ditutup.':'Form dibuka kembali.'); });
+  };
+  $('btnSimpanSetting').onclick = function(){
+    api.apiAdminToggleForm(tk(), $('swTutup').checked, $('catatanForm').value)
+      .then(function(){ alert('Tersimpan ke sheet Settings (key catatan_form).'); muatAdmin(); });
+  };
+  $('btnCsv').onclick = function(){
+    api.apiAdminCsv(tk()).then(function(r){
+      if (r.url) window.open(r.url,'_blank');
+      else if (r.csv) unduh(r.csv);
+      else alert('CSV tersedia di folder Drive “Seragam IPI Jateng”.');
+    });
+  };
+  $('btnDoc').onclick = function(){ api.apiAdminDoc(tk()).then(function(r){
+    if (r.url) window.open(r.url,'_blank'); else alert(r.pesan||'Rekap dibuat di Drive.'); }); };
+  $('btnReminder').onclick = function(){ api.apiAdminReminder(tk(), false)
+    .then(function(r){ $('tabelInfo').textContent = r.pesan.replace(/\n/g,' · '); alert(r.pesan); }); };
+  $('btnReminderKirim').onclick = function(){
+    if (!confirm('Kirim email pengingat ke semua anggota yang belum mengisi?')) return;
+    api.apiAdminReminder(tk(), true).then(function(r){ alert(r.pesan); });
+  };
+  if (SERVER.view === 'admin') { /* sudah ditangani boot() */ }
+});
+function unduh(csv) {
+  var b = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = 'Rekap Ukuran Seragam ' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function isiContoh() {
+  var d = (S.daftar||[])[0] || {n:'Contoh Nama'};
+  $('nama').value = d.n; $('wilayah').value = d.w||'Semarang'; $('jabatan').value = d.j||'';
+  $('wa').value = d.wa||'081234567890'; $('email').value = d.e||'';
+  setRadio('kelamin','Perempuan'); setRadio('model','Lengan Panjang');
+  $('dada').value = 104; $('pinggang').value = 88; $('tb').value = 160; $('bb').value = 62;
+  $('setuju').checked = true; isiBordir(); pickNama(); live();
+  $('catatan').value = 'Contoh isian untuk menguji formulir — hapus sebelum dikirim.';
+}
+</script>
+</body>
+</html>

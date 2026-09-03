@@ -1,0 +1,15 @@
+{
+  "name": "seragam-ipi-jateng",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Form pendataan ukuran seragam (Google Apps Script) — IPI Jawa Tengah",
+  "scripts": {
+    "preview": "python3 preview/serve.py 8080",
+    "test": "node tools/smoke-test.js && node tools/client-test.js",
+    "test:logic": "node tools/smoke-test.js",
+    "test:client": "node tools/client-test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^27.0.0"
+  }
+}

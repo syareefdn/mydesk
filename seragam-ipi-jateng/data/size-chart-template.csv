@@ -1,0 +1,9 @@
+Ukuran,Lingkar Dada Min,Lingkar Dada Max,Panjang Badan Min,Panjang Badan Max,Lebar Bahu,BB Min,BB Max,Catatan
+XS,84,90,62,65,40,40,48,⚠️ CONTOH — timpa dengan angka dari PDF size chart Anda
+S,90,96,65,68,42,48,57,
+M,96,102,68,71,44,57,66,
+L,102,108,71,73,46,66,76,
+XL,108,114,73,75,48,76,86,
+XXL,114,122,75,77,50,86,96,
+XXXL,122,130,77,79,52,96,106,
+4XL,130,138,79,81,54,106,116,"di atas 4XL → sistem menyarankan ""Ukuran Khusus (Custom)"""
