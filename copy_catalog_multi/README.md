@@ -29,7 +29,7 @@ Plugin ini melengkapi **P2P Service** bawaan SLiMS yang hanya bisa mencari ke
   `resultXML`/`inXML` aktif di server sumber.
 - ➕ **Server kustom** — tambahan server di luar Master File, tersimpan di
   `config.json` plugin (tidak mengotak-atik data inti).
-- 🌐 Kompatibel **SLiMS 9.3.0 – 9.3.x** (PHP 7.2+), tanpa `composer`,
+- 🌐 Kompatibel **SLiMS 9.3.0 – 9.3.x** (PHP 7.2+, teruji pada PHP **7.4.33**), tanpa `composer`,
   tanpa migrasi database, tanpa dependensi pada pustaka SLiMS versi baru.
 
 ## Syarat
@@ -37,7 +37,7 @@ Plugin ini melengkapi **P2P Service** bawaan SLiMS yang hanya bisa mencari ke
 | Kebutuhan | Keterangan |
 |---|---|
 | SLiMS | 9.3.x (dikembangkan & diuji pada **9.3.1**) |
-| PHP | 7.2+ (mengikuti syarat SLiMS 9.3) |
+| PHP | 7.2+ (teruji pada **7.4.33**) |
 | Ekstensi wajib | `SimpleXML`/`php-xml` |
 | Ekstensi disarankan | `php-curl` (untuk pencarian paralel yang cepat) |
 | Koneksi internet | Server SLiMS harus dapat mengakses OPAC sumber |
