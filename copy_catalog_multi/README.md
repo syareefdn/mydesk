@@ -50,19 +50,21 @@ Server **sumber** harus berbasis SLiMS dengan fitur XML aktif:
 
 ## Instalasi
 
-1. Salin folder **`copy_catalog_multi/`** dari repositori ini langsung ke
-   folder plugin SLiMS, sehingga strukturnya menjadi:
+1. Salin **folder `copy_catalog_multi/` DAN berkas loader
+   `copy_catalog_multi.plugin.php`** dari repositori ini ke folder plugin
+   SLiMS, sehingga strukturnya menjadi:
 
    ```
-   <slims>/plugins/copy_catalog_multi/
-   ├── copy_catalog_multi.plugin.php
-   ├── index.php
-   ├── config.json
-   ├── lib/
-   │   └── Helper.php
-   └── assets/
-       ├── app.js
-       └── style.css
+   <slims>/plugins/
+   ├── copy_catalog_multi.plugin.php   (loader — wajib, sejajar folder)
+   └── copy_catalog_multi/
+       ├── index.php
+       ├── config.json
+       ├── lib/
+       │   └── Helper.php
+       └── assets/
+           ├── app.js
+           └── style.css
    ```
 
    (Berkas `README.md`, `LICENSE`, dan `CHANGELOG.md` di dalam folder hanya
@@ -73,7 +75,8 @@ Server **sumber** harus berbasis SLiMS dengan fitur XML aktif:
    ```bash
    cd /tmp && git clone --depth 1 https://github.com/syareefdn/mydesk
    cp -r mydesk/copy_catalog_multi /var/www/html/slims/plugins/
-   chown -R www-data:www-data /var/www/html/slims/plugins/copy_catalog_multi
+   cp mydesk/copy_catalog_multi.plugin.php /var/www/html/slims/plugins/
+   chown -R www-data:www-data /var/www/html/slims/plugins/copy_catalog_multi /var/www/html/slims/plugins/copy_catalog_multi.plugin.php
    chmod 775 /var/www/html/slims/plugins/copy_catalog_multi /var/www/html/slims/plugins/copy_catalog_multi/config.json
    ```
 
@@ -154,7 +157,7 @@ Pengaturan tersimpan di `config.json`. Contoh:
 
 | File | Peran |
 |---|---|
-| `copy_catalog_multi/copy_catalog_multi.plugin.php` | Registrasi menu ke modul Bibliography |
+| `copy_catalog_multi.plugin.php` (di `plugins/`) | Loader registrasi menu — kebal bug pindai 9.3.x |
 | `copy_catalog_multi/index.php` | UI + endpoint AJAX (`search`, `detail`, `save`, `test`, `save_config`, `add/del_custom_server`) |
 | `copy_catalog_multi/lib/Helper.php` | `CCM_Helper`: daftar server, `curl_multi`, parsing MODS XML (+ fallback internal), simpan biblio |
 | `copy_catalog_multi/assets/app.js` | Logika frontend (jQuery): pencarian, tabel hasil, modal detail, salin, uji koneksi |
@@ -170,7 +173,7 @@ gantinya memakai `curl`/stream bawaan PHP dan pustaka inti SLiMS yang stabil
 
 | Gejala | Penyebab umum & solusi |
 |---|---|
-| Plugin tidak muncul di System → Plugin | Pastikan folder bernama persis `copy_catalog_multi` langsung di `<slims>/plugins/` instalasi yang benar (bukan bertingkat / bukan di SLiMS lain), nama berkas `.plugin.php` huruf kecil semua, dan permission folder `755` / berkas `644`. Diagnosis cepat: buka `https://domain-anda/slims/plugins/copy_catalog_multi/cek_instalasi.php` di browser (hapus berkasnya setelah selesai). |
+| Plugin tidak muncul di System → Plugin | Sejak v1.0.2 pola loader kebal bug pindai 9.3.x: pastikan berkas `copy_catalog_multi.plugin.php` ada LANGSUNG di `<slims>/plugins/` (sejajar folder, bukan di dalamnya) + folder `copy_catalog_multi/` di instalasi yang benar, nama persis huruf kecil, permission folder `755` / berkas `644`. Upgrade dari 1.0.x: hapus folder lama dulu agar tidak ganda. Diagnosis: buka `https://domain-anda/slims/plugins/copy_catalog_multi/cek_instalasi.php` (hapus berkasnya setelah selesai). |
 | Semua server *offline* | Server SLiMS tidak bisa keluar internet (cek DNS/firewall/`allow_url_fopen`), atau URL basis salah (harus basis instalasi SLiMS, mis. `.../slims/` bukan halaman detail). |
 | *Terhubung, tetapi XML tidak valid* | `resultXML`/`inXML` dimatikan di server sumber, atau URL bukan OPAC SLiMS. Buka URL XML manual di browser untuk memastikan. |
 | Hasil kosong padahal data ada | Coba ruas *Semua* atau kata kunci lain; sebagian OPAC memakai mesin indeks berbeda. |

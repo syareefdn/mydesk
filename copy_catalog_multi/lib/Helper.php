@@ -22,7 +22,7 @@ if (!defined('INDEX_AUTH')) {
 
 class CCM_Helper
 {
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
     const CONFIG_FILE = 'config.json';
 
     /**

@@ -37,10 +37,10 @@ $add = function ($label, $ok, $detail = '') use (&$rows) {
     $rows[] = array($label, (bool)$ok, (string)$detail);
 };
 
-// --- 1. Berkas plugin ---
-$pluginFile = $dir . '/copy_catalog_multi.plugin.php';
-$add('Berkas <code>copy_catalog_multi.plugin.php</code> ada di folder ini', is_file($pluginFile), $pluginFile);
-$add('Berkas tersebut bisa dibaca oleh PHP', is_readable($pluginFile));
+// --- 1. Berkas loader plugin (v1.0.2+: pendaftaran via loader di plugins/) ---
+$pluginFile = $pluginsDir . '/copy_catalog_multi.plugin.php';
+$add('Berkas loader <code>copy_catalog_multi.plugin.php</code> ada di folder <code>plugins/</code> (sejajar folder ini)', is_file($pluginFile), $pluginFile);
+$add('Berkas loader bisa dibaca oleh PHP', is_readable($pluginFile));
 
 $headerOk = false;
 if (is_readable($pluginFile)) {
@@ -48,6 +48,14 @@ if (is_readable($pluginFile)) {
     $headerOk = is_string($head) && stripos($head, 'Plugin Name:') !== false;
 }
 $add('Header <code>Plugin Name:</code> terbaca (syarat tampil di daftar plugin)', $headerOk);
+
+$legacyFile = $dir . '/copy_catalog_multi.plugin.php';
+$legacyGone = !is_file($legacyFile);
+$add(
+    'Tidak ada sisa instalasi lama v1.0.x di dalam folder ini',
+    $legacyGone,
+    $legacyGone ? 'Bersih' : 'Ditemukan! Hapus ' . $legacyFile . ' agar plugin tidak muncul ganda di daftar.'
+);
 
 // --- 2. Keterbacaan folder ---
 $ownList = @scandir($dir);
@@ -143,8 +151,9 @@ ul { margin: 6px 0 0 18px; padding: 0; font-size: 13px; }
   <div class="warn">
     <b>Ada <?php echo (int)$failCount; ?> pemeriksaan yang gagal.</b> Periksa yang bertanda GAGAL:
     <ul>
-      <li>Berkas plugin tidak ada / tidak terbaca &rarr; upload ulang folder <code>copy_catalog_multi</code>,
-        pastikan nama berkas persis huruf kecil <code>copy_catalog_multi.plugin.php</code>.</li>
+      <li>Berkas loader tidak ada / tidak terbaca &rarr; upload berkas <code>copy_catalog_multi.plugin.php</code>
+        LANGSUNG ke folder <code>plugins/</code> (sejajar folder <code>copy_catalog_multi/</code>,
+        bukan di dalamnya), dengan nama persis huruf kecil.</li>
       <li><code>sysconfig.inc.php</code> tidak ditemukan &rarr; folder plugin <b>salah tempat</b>;
         pindahkan ke <code>&lt;slims&gt;/plugins/copy_catalog_multi/</code> instalasi yang benar.</li>
       <li>Versi SLiMS di bawah 9.3 &rarr; sistem plugin tidak tersedia; plugin ini butuh SLiMS 9.3+.</li>

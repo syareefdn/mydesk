@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 — 2026-09-08
+
+- Perbaikan: pola loader agar kebal bug pemindai plugin SLiMS 9.3.x (9.3.x
+  hanya memindai 2 folder pertama di `plugins/`). Berkas
+  `copy_catalog_multi.plugin.php` kini diletakkan langsung di `plugins/`,
+  folder `copy_catalog_multi/` tidak lagi berisi berkas `.plugin.php`.
+- Cara upgrade dari 1.0.x: hapus folder lama, salin folder baru + berkas
+  loader, lalu aktifkan ulang di System → Plugin.
+- `cek_instalasi.php` kini memeriksa berkas loader dan mendeteksi sisa
+  instalasi lama.
+
 ## 1.0.1 — 2026-09-08
 
 - Perbaikan: tab Pengaturan & Bantuan tidak lagi dicegat AJAX bawaan admin
