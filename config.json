@@ -1,0 +1,9 @@
+{
+    "timeout": 12,
+    "per_server_limit": 10,
+    "download_cover": true,
+    "download_digitals": true,
+    "skip_duplicate_isbn": true,
+    "default_field": "",
+    "custom_servers": []
+}
