@@ -170,6 +170,7 @@ gantinya memakai `curl`/stream bawaan PHP dan pustaka inti SLiMS yang stabil
 
 | Gejala | Penyebab umum & solusi |
 |---|---|
+| Plugin tidak muncul di System → Plugin | Pastikan folder bernama persis `copy_catalog_multi` langsung di `<slims>/plugins/` instalasi yang benar (bukan bertingkat / bukan di SLiMS lain), nama berkas `.plugin.php` huruf kecil semua, dan permission folder `755` / berkas `644`. Diagnosis cepat: buka `https://domain-anda/slims/plugins/copy_catalog_multi/cek_instalasi.php` di browser (hapus berkasnya setelah selesai). |
 | Semua server *offline* | Server SLiMS tidak bisa keluar internet (cek DNS/firewall/`allow_url_fopen`), atau URL basis salah (harus basis instalasi SLiMS, mis. `.../slims/` bukan halaman detail). |
 | *Terhubung, tetapi XML tidak valid* | `resultXML`/`inXML` dimatikan di server sumber, atau URL bukan OPAC SLiMS. Buka URL XML manual di browser untuk memastikan. |
 | Hasil kosong padahal data ada | Coba ruas *Semua* atau kata kunci lain; sebagian OPAC memakai mesin indeks berbeda. |
