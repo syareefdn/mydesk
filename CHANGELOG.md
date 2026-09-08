@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.3 — 2026-09-08
+
+- Perubahan besar: pola file-datar (tanpa folder). Ke-7 berkas
+  `copy_catalog_multi.*` diletakkan langsung di `plugins/` sehingga tidak
+  menghabiskan slot pindai dan tidak menyembunyikan plugin lain di 9.3.x.
+- Upgrade dari <=1.0.2: hapus folder lama `plugins/copy_catalog_multi/`,
+  upload ke-7 berkas baru (atau ekstrak zip rilis). Tidak perlu aktivasi
+  ulang.
+- Tambah `copy_catalog_multi-v1.0.3.zip` siap ekstrak untuk shared hosting.
+- `cek_instalasi.php` menjadi `copy_catalog_multi.cek.php`: memeriksa
+  kelengkapan 7 berkas, sisa instalasi lama, dan versi pemindai inti.
+- README: panduan instalasi baru + lampiran patch 1-baris inti 9.3.x.
+
 ## 1.0.2 — 2026-09-08
 
 - Perbaikan: pola loader agar kebal bug pemindai plugin SLiMS 9.3.x (9.3.x

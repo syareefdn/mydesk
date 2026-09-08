@@ -28,7 +28,7 @@ if (!$can_read) {
     die('<div class="errorBox">' . __('You are not authorized to view this section') . '</div>');
 }
 
-require_once __DIR__ . '/lib/Helper.php';
+require_once __DIR__ . '/copy_catalog_multi.helper.php';
 
 $config = CCM_Helper::loadConfig();
 $servers = CCM_Helper::getServers($dbs, $config);
@@ -38,9 +38,8 @@ $__mod = isset($_GET['mod']) ? preg_replace('/[^a-z_]/i', '', (string)$_GET['mod
 $__id = isset($_GET['id']) ? preg_replace('/[^a-z0-9]/i', '', (string)$_GET['id']) : '';
 $SELF = $_SERVER['PHP_SELF'] . '?mod=' . urlencode($__mod) . '&id=' . urlencode($__id);
 
-// URL aset plugin (untuk <script>/<link>)
-$PLUGIN_DIRNAME = basename(__DIR__);
-$ASSETS = SWB . 'plugins/' . $PLUGIN_DIRNAME . '/assets/';
+// URL aset plugin (untuk <script>/<link>) — pola file-datar v1.0.3+
+$ASSETS = SWB . 'plugins/';
 
 $action = isset($_REQUEST['action']) ? trim((string)$_REQUEST['action']) : '';
 
@@ -374,7 +373,7 @@ $hasCurl = function_exists('curl_init') && function_exists('curl_multi_init');
 $hasSimpleXML = function_exists('simplexml_load_string');
 $mwbMaster = defined('MWB') ? MWB : 'modules/';
 ?>
-<link rel="stylesheet" href="<?php echo CCM_Helper::h($ASSETS . 'style.css?v=' . CCM_Helper::VERSION); ?>">
+<link rel="stylesheet" href="<?php echo CCM_Helper::h($ASSETS . 'copy_catalog_multi.style.css?v=' . CCM_Helper::VERSION); ?>">
 <div class="menuBox">
   <div class="menuBoxInner biblioIcon">
     <div class="per_title">
@@ -681,4 +680,4 @@ var CCM = {
   }
 };
 </script>
-<script src="<?php echo CCM_Helper::h($ASSETS . 'app.js?v=' . CCM_Helper::VERSION); ?>"></script>
+<script src="<?php echo CCM_Helper::h($ASSETS . 'copy_catalog_multi.app.js?v=' . CCM_Helper::VERSION); ?>"></script>

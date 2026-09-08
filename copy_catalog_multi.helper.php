@@ -22,8 +22,8 @@ if (!defined('INDEX_AUTH')) {
 
 class CCM_Helper
 {
-    const VERSION = '1.0.2';
-    const CONFIG_FILE = 'config.json';
+    const VERSION = '1.0.3';
+    const CONFIG_FILE = 'copy_catalog_multi.config.json';
 
     /**
      * Konfigurasi bawaan.
@@ -55,7 +55,7 @@ class CCM_Helper
      */
     public static function configPath()
     {
-        return dirname(__DIR__) . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
+        return __DIR__ . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
     }
 
     /**

@@ -28,9 +28,12 @@ Plugin ini melengkapi **P2P Service** bawaan SLiMS yang hanya bisa mencari ke
 - 🛰️ **Uji koneksi** — tombol *uji* per server dan *uji semua* untuk memastikan
   `resultXML`/`inXML` aktif di server sumber.
 - ➕ **Server kustom** — tambahan server di luar Master File, tersimpan di
-  `config.json` plugin (tidak mengotak-atik data inti).
+  `copy_catalog_multi.config.json` plugin (tidak mengotak-atik data inti).
 - 🌐 Kompatibel **SLiMS 9.3.0 – 9.3.x** (PHP 7.2+, teruji pada PHP **7.4.33**), tanpa `composer`,
   tanpa migrasi database, tanpa dependensi pada pustaka SLiMS versi baru.
+- 📁 **Tanpa folder** — semua berkas bernama `copy_catalog_multi.*` langsung di
+  `plugins/`, sehingga tidak ikut berebut slot pindai dan tidak menyembunyikan
+  plugin lain di SLiMS 9.3.x.
 
 ## Syarat
 
@@ -50,37 +53,41 @@ Server **sumber** harus berbasis SLiMS dengan fitur XML aktif:
 
 ## Instalasi
 
-1. Salin **folder `copy_catalog_multi/` DAN berkas loader
-   `copy_catalog_multi.plugin.php`** dari repositori ini ke folder plugin
-   SLiMS, sehingga strukturnya menjadi:
+1. Letakkan **ke-7 berkas `copy_catalog_multi.*`** dari repositori ini langsung
+   di folder plugin SLiMS (**tanpa subfolder**), sehingga strukturnya menjadi:
 
    ```
    <slims>/plugins/
-   ├── copy_catalog_multi.plugin.php   (loader — wajib, sejajar folder)
-   └── copy_catalog_multi/
-       ├── index.php
-       ├── config.json
-       ├── lib/
-       │   └── Helper.php
-       └── assets/
-           ├── app.js
-           └── style.css
+   ├── copy_catalog_multi.plugin.php   (loader/pendaftaran)
+   ├── copy_catalog_multi.index.php    (halaman + endpoint AJAX)
+   ├── copy_catalog_multi.helper.php   (inti logika)
+   ├── copy_catalog_multi.config.json  (pengaturan — harus writable)
+   ├── copy_catalog_multi.app.js       (frontend)
+   ├── copy_catalog_multi.style.css    (gaya)
+   └── copy_catalog_multi.cek.php      (diagnosis — hapus setelah dipakai)
    ```
 
-   (Berkas `README.md`, `LICENSE`, dan `CHANGELOG.md` di dalam folder hanya
-   dokumentasi; SLiMS mengabaikannya.)
+   **Cara termudah (cPanel/shared hosting):** upload berkas
+   `copy_catalog_multi-v1.0.3.zip` dari repo ini ke `plugins/`, lalu
+   **Extract** — pastikan ke-7 berkas mendarat langsung di `plugins/`
+   (bukan di dalam subfolder), kemudian hapus zip-nya.
 
    Contoh via terminal di server SLiMS:
 
    ```bash
    cd /tmp && git clone --depth 1 https://github.com/syareefdn/mydesk
-   cp -r mydesk/copy_catalog_multi /var/www/html/slims/plugins/
-   cp mydesk/copy_catalog_multi.plugin.php /var/www/html/slims/plugins/
-   chown -R www-data:www-data /var/www/html/slims/plugins/copy_catalog_multi /var/www/html/slims/plugins/copy_catalog_multi.plugin.php
-   chmod 775 /var/www/html/slims/plugins/copy_catalog_multi /var/www/html/slims/plugins/copy_catalog_multi/config.json
+   cp mydesk/copy_catalog_multi.* /var/www/html/slims/plugins/
+   chown www-data:www-data /var/www/html/slims/plugins/copy_catalog_multi.*
+   chmod 644 /var/www/html/slims/plugins/copy_catalog_multi.*
+   chmod 664 /var/www/html/slims/plugins/copy_catalog_multi.config.json
    ```
 
-   > `config.json` perlu *writable* agar pengaturan bisa disimpan dari browser.
+   **Upgrade dari v1.0.x:** hapus dulu folder lama `plugins/copy_catalog_multi/`
+   beserta isinya (pola lama berbentuk folder), lalu letakkan ke-7 berkas baru.
+   Tidak perlu aktivasi ulang. Catatan: bila memakai hak akses staf non-admin
+   per menu, periksa ulang centang menu plugin ini karena ID menunya berubah.
+
+   > `copy_catalog_multi.config.json` perlu *writable* agar pengaturan bisa disimpan dari browser.
    > Bila ragu, `chmod 775` (atau `777` bila perlu).
 
 2. Masuk ke SLiMS sebagai admin, buka **System → Plugin**, cari
@@ -137,7 +144,7 @@ Di tab **Pengaturan**:
 | Izinkan unduh file digital | Ya | Tampilkan pilihan file saat salin satu-satu |
 | Lewati ISBN duplikat | Ya | Lewati otomatis bila ISBN sudah ada |
 
-Pengaturan tersimpan di `config.json`. Contoh:
+Pengaturan tersimpan di `copy_catalog_multi.config.json`. Contoh:
 
 ```json
 {
@@ -155,14 +162,15 @@ Pengaturan tersimpan di `config.json`. Contoh:
 
 ## Struktur kode
 
-| File | Peran |
+| File (di `plugins/`) | Peran |
 |---|---|
-| `copy_catalog_multi.plugin.php` (di `plugins/`) | Loader registrasi menu — kebal bug pindai 9.3.x |
-| `copy_catalog_multi/index.php` | UI + endpoint AJAX (`search`, `detail`, `save`, `test`, `save_config`, `add/del_custom_server`) |
-| `copy_catalog_multi/lib/Helper.php` | `CCM_Helper`: daftar server, `curl_multi`, parsing MODS XML (+ fallback internal), simpan biblio |
-| `copy_catalog_multi/assets/app.js` | Logika frontend (jQuery): pencarian, tabel hasil, modal detail, salin, uji koneksi |
-| `copy_catalog_multi/assets/style.css` | Gaya tambahan |
-| `copy_catalog_multi/config.json` | Konfigurasi + server kustom (dibuat writable) |
+| `copy_catalog_multi.plugin.php` | Loader: registrasi menu (selalu terdeteksi) |
+| `copy_catalog_multi.index.php` | UI + endpoint AJAX (`search`, `detail`, `save`, `test`, `save_config`, `add/del_custom_server`) |
+| `copy_catalog_multi.helper.php` | `CCM_Helper`: daftar server, `curl_multi`, parsing MODS XML (+ fallback internal), simpan biblio |
+| `copy_catalog_multi.app.js` | Logika frontend (jQuery): pencarian, tabel hasil, modal detail, salin, uji koneksi |
+| `copy_catalog_multi.style.css` | Gaya tambahan |
+| `copy_catalog_multi.config.json` | Konfigurasi + server kustom (dibuat writable) |
+| `copy_catalog_multi.cek.php` | Diagnosis instalasi (hapus setelah dipakai) |
 
 Prinsip kompatibilitas 9.3.1: tidak memakai `SLiMS\Http\Client`, `SLiMS\Url`,
 atau `SLiMS\Filesystems\Storage` (pustaka yang berubah antar versi); sebagai
@@ -173,13 +181,14 @@ gantinya memakai `curl`/stream bawaan PHP dan pustaka inti SLiMS yang stabil
 
 | Gejala | Penyebab umum & solusi |
 |---|---|
-| Plugin tidak muncul di System → Plugin | Sejak v1.0.2 pola loader kebal bug pindai 9.3.x: pastikan berkas `copy_catalog_multi.plugin.php` ada LANGSUNG di `<slims>/plugins/` (sejajar folder, bukan di dalamnya) + folder `copy_catalog_multi/` di instalasi yang benar, nama persis huruf kecil, permission folder `755` / berkas `644`. Upgrade dari 1.0.x: hapus folder lama dulu agar tidak ganda. Diagnosis: buka `https://domain-anda/slims/plugins/copy_catalog_multi/cek_instalasi.php` (hapus berkasnya setelah selesai). |
+| Plugin tidak muncul di System → Plugin | Pastikan berkas `copy_catalog_multi.plugin.php` ada langsung di `<slims>/plugins/` instalasi yang benar (nama persis huruf kecil, permission `644`). Bila upgrade dari ≤1.0.2: hapus folder lama `plugins/copy_catalog_multi/` agar tidak ganda. Diagnosis: buka `https://domain-anda/slims/plugins/copy_catalog_multi.cek.php` di browser (upload dulu bila belum ada; hapus berkasnya setelah selesai). |
+| Plugin lain hilang dari daftar | Itu bug pemindai SLiMS 9.3.x (hanya ±2 folder pertama dipindai) — sejak v1.0.3 plugin ini tidak memakai folder sehingga bukan penyebabnya. Solusi tuntas: terapkan patch 1-baris inti (lihat lampiran di bawah) atau kurangi jumlah folder di `plugins/` (pindahkan arsip/zip/sisa ekstrak ke luar `plugins/`). |
 | Semua server *offline* | Server SLiMS tidak bisa keluar internet (cek DNS/firewall/`allow_url_fopen`), atau URL basis salah (harus basis instalasi SLiMS, mis. `.../slims/` bukan halaman detail). |
 | *Terhubung, tetapi XML tidak valid* | `resultXML`/`inXML` dimatikan di server sumber, atau URL bukan OPAC SLiMS. Buka URL XML manual di browser untuk memastikan. |
 | Hasil kosong padahal data ada | Coba ruas *Semua* atau kata kunci lain; sebagian OPAC memakai mesin indeks berbeda. |
 | Salin gagal sebagian | Timeout ke server sumber saat ambil detail; ulangi untuk record yang gagal. Perbesar timeout bila perlu. |
 | Cover tidak ikut | Nama berkas tidak standar / proteksi hotlink di server sumber. Data teks tetap tersimpan. |
-| Pengaturan tidak tersimpan | `config.json` tidak writable — `chmod 775` folder plugin & berkasnya. |
+| Pengaturan tidak tersimpan | `copy_catalog_multi.config.json` tidak writable — `chmod 664` (atau `666`) berkasnya. |
 | Menu tidak muncul | Plugin belum di-Enable di **System → Plugin**; pastikan nama folder `copy_catalog_multi` dan `.plugin.php` terbaca (pemindaian maks. 3 tingkat). |
 | Tidak bisa menyalin (tombol hilang) | Akun staf tidak punya hak **tulis** modul Bibliography. |
 
@@ -190,6 +199,42 @@ gantinya memakai `curl`/stream bawaan PHP dan pustaka inti SLiMS yang stabil
 - Maksimal 25 record per sekali proses salin massal.
 - Hanya mendukung sumber **SLiMS** (protokol XML `resultXML`/`inXML`), bukan
   Z39.50/SRU generik (untuk itu tetap gunakan menu MARC SRU / Z39.50 bawaan).
+
+## Lampiran: patch 1-baris inti SLiMS 9.3.x (opsional)
+
+Bug: `lib/Plugins.php` versi 9.3.x hanya memindai ±2 folder pertama di
+`plugins/` (penghitung kedalaman tidak pernah di-reset; sudah diperbaiki
+di 9.4+). Plugin ini (v1.0.3+) tidak terpengaruh karena tidak memakai
+folder, tetapi plugin-folder *lain* tetap bisa saling menyembunyikan.
+
+Bila Anda punya banyak plugin berbentuk folder dan ingin semuanya tampil,
+tambahkan **satu baris** di `lib/Plugins.php` fungsi `getPluginsInfo`
+(salin cadangan berkasnya dulu via File Manager!).
+
+Cari:
+```php
+                } elseif (is_dir($path) && (substr($file, 0, 1) != '.')) {
+                    $this->deep++;
+                    // get plugins from sub folder location
+                    // deep level directory that will be scanned
+                    if ($this->deep < 3) $this->getPluginsInfo($path);
+                }
+```
+
+Ubah menjadi (tambah baris `$this->deep--;`):
+```php
+                } elseif (is_dir($path) && (substr($file, 0, 1) != '.')) {
+                    $this->deep++;
+                    // get plugins from sub folder location
+                    // deep level directory that will be scanned
+                    if ($this->deep < 3) $this->getPluginsInfo($path);
+                    $this->deep--; // kembalikan penghitung (perbaikan 9.3.x)
+                }
+```
+
+Catatan: tidak perlu patch ini bila `lib/Plugins.php` Anda sudah mengandung
+`function isDeep` (artinya sudah versi baru), dan patch perlu diulang setiap
+upgrade SLiMS.
 
 ## Lisensi
 

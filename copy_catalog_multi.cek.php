@@ -3,9 +3,10 @@
  * Copy Catalog Multi Server - Skrip Diagnosis Instalasi
  *
  * Cara pakai:
- *  1. Pastikan file ini ada di: <slims>/plugins/copy_catalog_multi/cek_instalasi.php
+ *  1. Pastikan file ini ada di: <slims>/plugins/copy_catalog_multi.cek.php
+ *     (bersama 6 berkas copy_catalog_multi.* lainnya, tanpa subfolder)
  *  2. Buka lewat browser, misal:
- *     https://domain-anda/slims/plugins/copy_catalog_multi/cek_instalasi.php
+ *     https://domain-anda/slims/plugins/copy_catalog_multi.cek.php
  *  3. Baca hasilnya / kirim screenshot ke pengembang bila masih bermasalah.
  *
  * PENTING: hapus file ini setelah selesai diagnosis.
@@ -28,18 +29,17 @@ function ccm_badge($ok)
         : '<b style="color:#b91c1c">GAGAL</b>';
 }
 
-$dir = __DIR__; // .../plugins/copy_catalog_multi (seharusnya)
-$pluginsDir = dirname($dir); // .../plugins (seharusnya)
-$slimsRoot = dirname($pluginsDir); // .../ (root SLiMS, seharusnya)
+$dir = __DIR__; // .../plugins (seharusnya, v1.0.3+: file-datar)
+$slimsRoot = dirname($dir); // .../ (root SLiMS, seharusnya)
 
 $rows = array();
 $add = function ($label, $ok, $detail = '') use (&$rows) {
     $rows[] = array($label, (bool)$ok, (string)$detail);
 };
 
-// --- 1. Berkas loader plugin (v1.0.2+: pendaftaran via loader di plugins/) ---
-$pluginFile = $pluginsDir . '/copy_catalog_multi.plugin.php';
-$add('Berkas loader <code>copy_catalog_multi.plugin.php</code> ada di folder <code>plugins/</code> (sejajar folder ini)', is_file($pluginFile), $pluginFile);
+// --- 1. Berkas loader plugin (di folder yang sama dengan berkas ini) ---
+$pluginFile = $dir . '/copy_catalog_multi.plugin.php';
+$add('Berkas loader <code>copy_catalog_multi.plugin.php</code> ada di folder <code>plugins/</code>', is_file($pluginFile), $pluginFile);
 $add('Berkas loader bisa dibaca oleh PHP', is_readable($pluginFile));
 
 $headerOk = false;
@@ -49,20 +49,52 @@ if (is_readable($pluginFile)) {
 }
 $add('Header <code>Plugin Name:</code> terbaca (syarat tampil di daftar plugin)', $headerOk);
 
-$legacyFile = $dir . '/copy_catalog_multi.plugin.php';
-$legacyGone = !is_file($legacyFile);
+$legacyDir = $dir . '/copy_catalog_multi';
+$legacyGone = !is_dir($legacyDir);
 $add(
-    'Tidak ada sisa instalasi lama v1.0.x di dalam folder ini',
+    'Tidak ada sisa folder instalasi lama (v1.0.x)',
     $legacyGone,
-    $legacyGone ? 'Bersih' : 'Ditemukan! Hapus ' . $legacyFile . ' agar plugin tidak muncul ganda di daftar.'
+    $legacyGone ? 'Bersih' : 'Ditemukan! Hapus folder ' . $legacyDir . ' beserta isinya (v1.0.3+ tidak memakai folder).'
 );
+
+$required = array(
+    'copy_catalog_multi.plugin.php',
+    'copy_catalog_multi.index.php',
+    'copy_catalog_multi.helper.php',
+    'copy_catalog_multi.config.json',
+    'copy_catalog_multi.app.js',
+    'copy_catalog_multi.style.css',
+    'copy_catalog_multi.cek.php',
+);
+$missing = array();
+foreach ($required as $rf) {
+    if (!is_readable($dir . '/' . $rf)) {
+        $missing[] = $rf;
+    }
+}
+$add(
+    'Ke-7 berkas plugin ada & terbaca',
+    empty($missing),
+    empty($missing) ? 'Lengkap' : 'Kurang/tak terbaca: ' . implode(', ', $missing)
+);
+
+$corePlugins = $slimsRoot . '/lib/Plugins.php';
+$coreInfo = 'tidak terdeteksi';
+if (is_readable($corePlugins)) {
+    $coreSrc = @file_get_contents($corePlugins);
+    if (is_string($coreSrc)) {
+        if (strpos($coreSrc, 'function isDeep') !== false) {
+            $coreInfo = 'versi baru (tanpa batas folder)';
+        } elseif (strpos($coreSrc, '$this->deep++') !== false) {
+            $coreInfo = 'versi 9.3.x (maksimal +-2 folder — plugin ini tidak terpengaruh karena tanpa folder)';
+        }
+    }
+}
+$add('Pemindai plugin inti SLiMS', true, $coreInfo);
 
 // --- 2. Keterbacaan folder ---
 $ownList = @scandir($dir);
-$add('PHP bisa membaca isi folder plugin ini', is_array($ownList), is_array($ownList) ? (count($ownList) - 2) . ' berkas/folder terlihat' : 'scandir() gagal — cek permission folder (755)');
-
-$pluginsList = @scandir($pluginsDir);
-$add('PHP bisa membaca folder <code>plugins/</code> induk', is_array($pluginsList), $pluginsDir);
+$add('PHP bisa membaca folder <code>plugins/</code>', is_array($ownList), is_array($ownList) ? (count($ownList) - 2) . ' berkas/folder terlihat' : 'scandir() gagal — cek permission folder (755)');
 
 // --- 3. Apakah ini benar instalasi SLiMS? ---
 $sysconfig = $slimsRoot . '/sysconfig.inc.php';
@@ -89,7 +121,7 @@ $add('Ekstensi <code>curl</code> (disarankan)', extension_loaded('curl'));
 $add('Ekstensi <code>mbstring</code> (disarankan)', extension_loaded('mbstring'));
 
 // --- 5. Kepenulisan ---
-$add('Berkas <code>config.json</code> bisa ditulis (untuk menyimpan pengaturan)', is_writable($dir . '/config.json'));
+$add('Berkas <code>copy_catalog_multi.config.json</code> bisa ditulis (untuk menyimpan pengaturan)', is_writable($dir . '/copy_catalog_multi.config.json'));
 $add('Folder <code>images/docs/</code> bisa ditulis (untuk cover)', is_dir($slimsRoot . '/images/docs') && is_writable($slimsRoot . '/images/docs'));
 $add('Folder <code>repository/</code> bisa ditulis (untuk file digital)', is_dir($slimsRoot . '/repository') && is_writable($slimsRoot . '/repository'));
 
@@ -151,9 +183,9 @@ ul { margin: 6px 0 0 18px; padding: 0; font-size: 13px; }
   <div class="warn">
     <b>Ada <?php echo (int)$failCount; ?> pemeriksaan yang gagal.</b> Periksa yang bertanda GAGAL:
     <ul>
-      <li>Berkas loader tidak ada / tidak terbaca &rarr; upload berkas <code>copy_catalog_multi.plugin.php</code>
-        LANGSUNG ke folder <code>plugins/</code> (sejajar folder <code>copy_catalog_multi/</code>,
-        bukan di dalamnya), dengan nama persis huruf kecil.</li>
+      <li>Berkas kurang / tidak terbaca &rarr; upload ulang ke-7 berkas
+        <code>copy_catalog_multi.*</code> langsung ke folder <code>plugins/</code>
+        (tanpa subfolder), dengan nama persis huruf kecil.</li>
       <li><code>sysconfig.inc.php</code> tidak ditemukan &rarr; folder plugin <b>salah tempat</b>;
         pindahkan ke <code>&lt;slims&gt;/plugins/copy_catalog_multi/</code> instalasi yang benar.</li>
       <li>Versi SLiMS di bawah 9.3 &rarr; sistem plugin tidak tersedia; plugin ini butuh SLiMS 9.3+.</li>
@@ -164,7 +196,7 @@ ul { margin: 6px 0 0 18px; padding: 0; font-size: 13px; }
   <?php endif; ?>
 
   <div class="warn">
-    <b>Setelah selesai:</b> hapus berkas <code>cek_instalasi.php</code> ini dari server.
+    <b>Setelah selesai:</b> hapus berkas <code>copy_catalog_multi.cek.php</code> ini dari server.
   </div>
 </div>
 </body>
