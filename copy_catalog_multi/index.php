@@ -399,13 +399,13 @@ $mwbMaster = defined('MWB') ? MWB : 'modules/';
 <div class="ccm-wrap">
   <ul class="nav nav-tabs" id="ccmTabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#ccm-tab-search" role="tab"><?php echo __('Pencarian'); ?></a>
+      <a class="nav-link active notAJAX" data-toggle="tab" href="#ccm-tab-search" role="tab"><?php echo __('Pencarian'); ?></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#ccm-tab-setting" role="tab"><?php echo __('Pengaturan'); ?></a>
+      <a class="nav-link notAJAX" data-toggle="tab" href="#ccm-tab-setting" role="tab"><?php echo __('Pengaturan'); ?></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#ccm-tab-help" role="tab"><?php echo __('Bantuan'); ?></a>
+      <a class="nav-link notAJAX" data-toggle="tab" href="#ccm-tab-help" role="tab"><?php echo __('Bantuan'); ?></a>
     </li>
   </ul>
 

@@ -118,7 +118,7 @@
       var dig = r.has_digitals > 0 ? ' <span class="badge badge-secondary" title="Ada file digital">' + r.has_digitals + ' file</span>' : '';
       var row = '<tr data-index="' + i + '">' +
         '<td><input type="checkbox" class="ccm-row-check" data-index="' + i + '"></td>' +
-        '<td><a href="#" class="ccm-title-link font-weight-bold" data-index="' + i + '">' + esc(r.title) + '</a>' +
+        '<td><a href="#" class="ccm-title-link font-weight-bold notAJAX" data-index="' + i + '">' + esc(r.title) + '</a>' +
         '<div class="small text-muted">' + esc(r.authors || '-') + '</div></td>' +
         '<td><small>' + esc(pub || '-') + (r.gmd ? '<br><span class="badge badge-light">' + esc(r.gmd) + '</span>' : '') + '</small></td>' +
         '<td><small>' + esc(r.isbn || '-') + '</small></td>' +

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 — 2026-09-08
+
+- Perbaikan: tab Pengaturan & Bantuan tidak lagi dicegat AJAX bawaan admin
+  (tambah kelas `notAJAX` pada tab dan tautan judul hasil).
+
 ## 1.0.0 — 2026-09-08
 
 - Rilis awal untuk SLiMS 9.3.x (diuji pada 9.3.1).
