@@ -50,8 +50,8 @@ Server **sumber** harus berbasis SLiMS dengan fitur XML aktif:
 
 ## Instalasi
 
-1. Unduh / clone repositori ini, lalu salin isinya ke folder plugin SLiMS
-   dengan nama `copy_catalog_multi`:
+1. Salin folder **`copy_catalog_multi/`** dari repositori ini langsung ke
+   folder plugin SLiMS, sehingga strukturnya menjadi:
 
    ```
    <slims>/plugins/copy_catalog_multi/
@@ -65,13 +65,16 @@ Server **sumber** harus berbasis SLiMS dengan fitur XML aktif:
        └── style.css
    ```
 
+   (Berkas `README.md`, `LICENSE`, dan `CHANGELOG.md` di dalam folder hanya
+   dokumentasi; SLiMS mengabaikannya.)
+
    Contoh via terminal di server SLiMS:
 
    ```bash
-   cd /var/www/html/slims/plugins
-   git clone https://github.com/syareefdn/mydesk copy_catalog_multi
-   chown -R www-data:www-data copy_catalog_multi
-   chmod 775 copy_catalog_multi copy_catalog_multi/config.json
+   cd /tmp && git clone --depth 1 https://github.com/syareefdn/mydesk
+   cp -r mydesk/copy_catalog_multi /var/www/html/slims/plugins/
+   chown -R www-data:www-data /var/www/html/slims/plugins/copy_catalog_multi
+   chmod 775 /var/www/html/slims/plugins/copy_catalog_multi /var/www/html/slims/plugins/copy_catalog_multi/config.json
    ```
 
    > `config.json` perlu *writable* agar pengaturan bisa disimpan dari browser.
@@ -151,12 +154,12 @@ Pengaturan tersimpan di `config.json`. Contoh:
 
 | File | Peran |
 |---|---|
-| `copy_catalog_multi.plugin.php` | Registrasi menu ke modul Bibliography |
-| `index.php` | UI + endpoint AJAX (`search`, `detail`, `save`, `test`, `save_config`, `add/del_custom_server`) |
-| `lib/Helper.php` | `CCM_Helper`: daftar server, `curl_multi`, parsing MODS XML (+ fallback internal), simpan biblio |
-| `assets/app.js` | Logika frontend (jQuery): pencarian, tabel hasil, modal detail, salin, uji koneksi |
-| `assets/style.css` | Gaya tambahan |
-| `config.json` | Konfigurasi + server kustom (dibuat writable) |
+| `copy_catalog_multi/copy_catalog_multi.plugin.php` | Registrasi menu ke modul Bibliography |
+| `copy_catalog_multi/index.php` | UI + endpoint AJAX (`search`, `detail`, `save`, `test`, `save_config`, `add/del_custom_server`) |
+| `copy_catalog_multi/lib/Helper.php` | `CCM_Helper`: daftar server, `curl_multi`, parsing MODS XML (+ fallback internal), simpan biblio |
+| `copy_catalog_multi/assets/app.js` | Logika frontend (jQuery): pencarian, tabel hasil, modal detail, salin, uji koneksi |
+| `copy_catalog_multi/assets/style.css` | Gaya tambahan |
+| `copy_catalog_multi/config.json` | Konfigurasi + server kustom (dibuat writable) |
 
 Prinsip kompatibilitas 9.3.1: tidak memakai `SLiMS\Http\Client`, `SLiMS\Url`,
 atau `SLiMS\Filesystems\Storage` (pustaka yang berubah antar versi); sebagai
